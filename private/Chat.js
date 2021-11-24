@@ -1,31 +1,21 @@
+const Broadcaster = require('./Network/Broadcaster');
 
-const WebSocket = require('ws');
+function NewChat(port) {
+	broadcaster = new Broadcaster(port);
 
-function Chat(port)
-{
-	var self = this;
-
-	this.onConnection = function(socket) 
+	broadcaster.onClientDisconnect = function(socket) 
 	{
-  		this.clientSockets.push(socket);
-  		socket.on('message', function(msg){self.onMessage(msg);});
-  		socket.on('close', function(){self.onClose(socket);});
-  	}
-
-	this.onMessage = function(msg) 
-	{
-		for(var i = 0; i < this.clientSockets.length; i++)
-			this.clientSockets[i].send(msg);
+		broadcaster.broadcast("d" + socket.index);
 	}
 
-	this.onClose = function(socket) 
-	{
-    	this.clientSockets = this.clientSockets.filter(s => s !== socket);
-  	}
+	broadcaster.incomingMessageParse = function(socket, imsg) {
+		var omsg = [];
+		omsg.push(this.clientSockets.indexOf(socket));
+		omsg.push(imsg);
+		return omsg;
+	}
 
-	this.serverSocket = new WebSocket.Server({port: port});
-	this.clientSockets = [];
-	this.serverSocket.on('connection', function(socket){self.onConnection(socket);});
+	return broadcaster;
 }
 
-module.exports = Chat;
+module.exports = {NewChat};
