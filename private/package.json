@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "tripcode": "^2.0.0",
+    "ws": "^8.3.0"
+  }
+}

@@ -1,3 +1,0 @@
-
-YNOnline.Network.Room = {};
-

@@ -1,41 +1,52 @@
 
 const WebSocket = require('ws');
 
-function Broadcaster(port)
+function Broadcaster()
 {
 	var broadcaster = this;
-
-	this.incomingMessageParse = function(socket, msg){}
+	
+	this.incomingMessagePreprocess = function(socket, msg){return msg;}
 	this.onClientDisconnect = function(socket){}
 
-	this.onConnection = function(socket) 
+	this.Connect = function(socket) 
 	{
-		socket.index = this.clientSockets.length;
-  		this.clientSockets.push(socket);
-  		socket.on('message', function(msg){broadcaster.onMessageDefault(socket, this.incomingMessageParse(msg));});
-  		socket.on('close', function(){broadcaster.onCloseDefault(socket);});
+		broadcaster.clientSockets[socket.uuid] = socket;
+  			socket.onmessage = function(e){
+			try {
+				broadcaster.onMessageDefault(socket, broadcaster.incomingMessagePreprocess(socket, JSON.parse(e.data)));
+			}
+			catch(error) {
+				YNOnline.Network.logEWarning(error);
+			}
+		};
   	}
 
 	  
-	this.onCloseDefault = function(socket) 
+	this.Disconnect = function(socket) 
 	{
-		this.clientSockets = this.clientSockets.filter(s => s !== socket);
-		this.onClientDisconnect(socket);
+		delete broadcaster.clientSockets[socket.uuid];
+		broadcaster.onClientDisconnect(socket);
 	}
 		
-	this.broadcast = function(msg) 
+	this.broadcast = function(broadsocket, msg) 
 	{
-		for(var i = 0; i < this.clientSockets.length; i++)
+		for(let uuid in broadcaster.clientSockets)
 		{
-			this.clientSockets[i].send(this.clientSockets[i], msg);
+			if(broadcaster.clientSockets.hasOwnProperty(uuid)) {
+				let socket = broadcaster.clientSockets[uuid];
+				
+				if(!broadsocket.storageInstance.chatignores.includes(socket.trip))
+					socket.send(JSON.stringify(msg));
+			}
 		}
 	}
 		
-	this.onMessageDefault = this.broadcast;
+	this.onMessageDefault = function(socket, msg) {
+		if(msg != null)
+			broadcaster.broadcast(socket, msg);
+	};
 
-	this.serverSocket = new WebSocket.Server({port: port});
-	this.clientSockets = [];
-	this.serverSocket.on('connection', function(socket){broadcaster.onConnection(socket);});
+	this.clientSockets = {};
 }
 
 module.exports = Broadcaster;
