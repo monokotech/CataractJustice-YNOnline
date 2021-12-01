@@ -19,7 +19,7 @@ Use 'node YNOnline.js' to start game server
 
 ## Set your WebSocket url
 
-go into ./public/
+go into ./public/scripts/
 
 open ynonline.js
 
