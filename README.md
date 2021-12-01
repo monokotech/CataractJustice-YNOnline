@@ -4,9 +4,9 @@ Yume Nikki browser multiplayer
 
 # Game Server Setup
 ## Set your WebSocket port
-###go into ./private/ 
-###open configuration.js
-###edit 'port' field of global.config object
+### go into ./private/ 
+### open configuration.js
+### edit 'port' field of global.config object
 ## Start your game server
 Use 'node YNOnline.js' to start game server
 
