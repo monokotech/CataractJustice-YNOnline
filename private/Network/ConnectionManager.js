@@ -38,8 +38,6 @@ function ConnectionManager(port) {
 				services[serviceName].Connect(socket);
 			}
 			else {
-				console.log(services);
-				console.log(serviceName);
 				socket.close();
 			}
 		};
