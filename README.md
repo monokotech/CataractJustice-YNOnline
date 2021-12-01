@@ -10,7 +10,7 @@ edit 'port' field of global.config object
 ### Start your game server
 Use 'node YNOnline.js' to start game server
 
-#Client setup
+# Client setup
 ### Set your WebSocket url
 go into ./public/
 open ynonline.js
