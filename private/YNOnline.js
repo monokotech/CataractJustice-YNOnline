@@ -2,8 +2,7 @@ require('./configuration');
 const Chat = require('./Chat');
 const GameServer = require('./Network/GameServer');
 const ConnectionManager = require('./Network/ConnectionManager');
-const https = require('https');
-const fs = require('fs');
+const http = require('http');
 const express = require('express');
 /*
 TO-DO:
@@ -30,16 +29,9 @@ global.YNOnline =
 	}
 };
 
-
-
-const credentials = {
-  key: fs.readFileSync('cert/key.pem'),
-  cert: fs.readFileSync('cert/cert.pem')
-};
-
 let expressapp = express();
 expressapp.use(express.static('public'));
-YNOnline.Network.httpsServer = https.createServer(credentials, expressapp).listen(config.port);
+YNOnline.Network.httpServer = http.createServer(expressapp).listen(config.port);
 
 
 YNOnline.Network.globalChat = Chat.NewChat();

@@ -57,6 +57,7 @@ function NewChatMessage(message, source) {
 	messageContainer.append(messageProfileContainer);
 	messageContainer.appendChild(messageTextContainer);
 	chatMessagesContainer.appendChild(messageContainer);
+	onNewChatEntry();
 }
 
 function PrintChatInfo(text, source) {
@@ -71,8 +72,15 @@ function PrintChatInfo(text, source) {
 	infoContainer.appendChild(infoSourceContainer);
 	infoContainer.appendChild(infoTextContainer);
 	chatMessagesContainer.appendChild(infoContainer);
+	onNewChatEntry();
 }
 
+function onNewChatEntry() {
+	let shouldScroll = (chatMessagesContainer.scrollHeight - chatMessagesContainer.scrollTop - chatMessagesContainer.clientHeight) <= 100;
+	if(shouldScroll) {
+		chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+	}
+}
 
 function Chat (address, service, isglobal) 
 {

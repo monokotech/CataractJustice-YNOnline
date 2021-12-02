@@ -6,7 +6,7 @@ const ClientsStorage = require('../ClientsStorage');
 function ConnectionManager() {
 	let manager = this;
 	let wsserver = new WebSocket.Server({
-		server: YNOnline.Network.httpsServer
+		server: YNOnline.Network.httpServer
 	});
 	let services = {};
 
