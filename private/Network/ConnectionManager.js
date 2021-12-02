@@ -3,9 +3,11 @@ const crypto = require('crypto');
 const ClientsStorage = require('../ClientsStorage');
 
 //ConnectionManager hosts web socket server and distributes ws connections between services
-function ConnectionManager(port) {
+function ConnectionManager() {
 	let manager = this;
-	let server = new WebSocket.Server({port: port});
+	let wsserver = new WebSocket.Server({
+		server: YNOnline.Network.httpsServer
+	});
 	let services = {};
 
 	let onConnection = function(socket, req) 
@@ -49,7 +51,7 @@ function ConnectionManager(port) {
 		});
   	}
 
-	server.on('connection', function(socket, req) {
+	wsserver.on('connection', function(socket, req) {
 		onConnection(socket, req);
 	});
 

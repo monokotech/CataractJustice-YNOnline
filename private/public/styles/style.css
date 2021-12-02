@@ -1,0 +1,63 @@
+	html, input[type='text'], select {
+      color: rgba(216, 216, 216, 1) !important; /*base*/
+      background-color: rgb(16, 16, 16);
+    }
+    
+    #controls button path {
+      stroke: rgba(216, 216, 216, 1) !important; /*base*/
+    }
+
+	body {
+		display: block;
+	}
+
+	#layout {
+		width: 100%;
+		height: 60%;
+		margin-right: auto;
+		margin-left: auto;
+		margin-top: 0px;
+		margin-bottom: 0px;
+		display: flex;
+	}
+
+    a {
+      color: rgba(255, 255, 157, 1); /*alt*/
+    }
+  
+    input[type='text'], select {
+      border: 12px solid transparent;
+      color: rgba(216, 216, 216, 1) !important; /*base*/
+      background-color: rgb(8,8,8) !important; /*basebg*/
+      text-shadow: 1.5px 1.5px black; /*shadow*/
+    }
+
+	#game_container {
+		width: 100%;
+		max-width: 800px;
+		display: block;
+	}
+
+	#chatboxContainer {
+		display: flex;
+		width: calc(100% - 805px);
+		min-width: 400px;
+		border-style: dashed;
+		border-color: rgb(24, 24, 24);
+		border-width: 2px;
+	}
+
+	#main_container {
+		margin-right: auto;
+		margin-left: auto;
+		margin-top: 64px;
+		margin-bottom: 0px;
+		width: 100%;
+		max-width: 1208px;
+		display: flex;
+		flex-wrap: wrap;
+		overflow: hidden;
+		border-color: rgb(24, 24, 24);
+		border-style: dashed;
+		border-width: 2px;
+	}
