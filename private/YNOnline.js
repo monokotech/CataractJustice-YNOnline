@@ -3,9 +3,8 @@ const Chat = require('./Chat');
 const GameServer = require('./Network/GameServer');
 const ConnectionManager = require('./Network/ConnectionManager');
 const https = require('https');
-const url = require('url');
-const path = require('path');
 const fs = require('fs');
+const express = require('express');
 /*
 TO-DO:
 	**fix possible exploit when in json sent by client some of the value-type fields can be replaced with objects
@@ -33,39 +32,16 @@ global.YNOnline =
 
 
 
-const options = {
+const credentials = {
   key: fs.readFileSync('cert/key.pem'),
   cert: fs.readFileSync('cert/cert.pem')
 };
 
-let baseDirectory = "./public"
-console.log("press ctrl + C to exit");
-YNOnline.Network.httpsServer = https.createServer(options, 
+let expressapp = express();
+expressapp.use(express.static('public'));
+YNOnline.Network.httpsServer = https.createServer(credentials, expressapp).listen(config.port);
 
-function (request, response) {
 
-    try {
-        var requestUrl = url.parse(request.url);
-
-        // need to use path.normalize so people can't access directories underneath baseDirectory
-        var fsPath = baseDirectory+path.normalize(requestUrl.pathname);
-        var fileStream = fs.createReadStream(fsPath);
-        fileStream.pipe(response);
-        fileStream.on('open', function() {
-             response.writeHead(200)
-        });
-        fileStream.on('error',function(e) {
-             response.writeHead(404)     // assume the file doesn't exist
-             response.end()
-        });
-   } catch(e) {
-        response.writeHead(500)
-        response.end()     // end the response so browsers don't hang
-        console.log(e.stack)
-   }
-}
-
-).listen(config.port);
 YNOnline.Network.globalChat = Chat.NewChat();
 YNOnline.Network.gameServer = new GameServer();
 YNOnline.Network.connectionManager = new ConnectionManager();

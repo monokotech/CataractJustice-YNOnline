@@ -2,7 +2,6 @@ const Broadcaster = require('./Network/Broadcaster');
 const ClientsStorage = require('./ClientsStorage');
 const tripcode = require('tripcode');
 
-
 function NewChat() {
 	broadcaster = new Broadcaster();
 
