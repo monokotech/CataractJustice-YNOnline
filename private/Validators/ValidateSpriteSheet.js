@@ -1,5 +1,5 @@
 const fs = require('fs');
-const spritesDir = './public/play/gamesdefault/CharSet/';
+const spritesDir = config.gamePath + '/CharSet/';
 
 let spriteSheetList;
 

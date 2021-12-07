@@ -16,6 +16,7 @@ global.config =
 	keypath: "",
 	certpath: "",
 	clientPath: "public",
+	gamePath: "./public/play/games/default/",
 
 	shouldSendPings: true,
 	pingInterval_ms: 15000

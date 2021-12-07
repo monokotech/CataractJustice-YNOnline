@@ -1,5 +1,5 @@
 const fs = require('fs');
-const soundsDir = './public/play/gamesdefault/Sound/';
+const soundsDir =  config.gamePath + '/Sound/';
 
 let soundFileList = [];
 
