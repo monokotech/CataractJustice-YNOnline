@@ -7,8 +7,9 @@ function SyncObject() {
 	this.sprite = {sheet: "000000000054", id: 0};
 	this.sound = config.defauldSprite;
 	this.name = config.defaultName;
+	this.movementAnimationSpeed = 2;
 
-	this.syncData = {type: "objectSync", uid: this.uid};
+	this.syncData = {type: "objectSync", uid: this.uid, pos: this.pos, name: this.name};
 
 	this.SetPosition = function(args) {
 		self.pos.x = args.x;
@@ -44,8 +45,13 @@ function SyncObject() {
 		self.syncData.name = args.name;
 	}
 
+	this.SetMovementSpeed = function(args) {
+		self.movementAnimationSpeed = args.movementAnimationSpeed;
+		self.syncData.movementAnimationSpeed = args.movementAnimationSpeed;
+	}
+
 	this.GetFullSyncData = function() {
-		return { type: "objectSync", uid: self.uid, pos: self.pos, sprite: self.sprite, name: self.name };
+		return { type: "objectSync", uid: self.uid, pos: self.pos, sprite: self.sprite, name: self.name, movementAnimationSpeed: self.movementAnimationSpeed};
 	}
 }
 

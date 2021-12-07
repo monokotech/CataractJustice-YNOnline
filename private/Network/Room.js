@@ -9,7 +9,8 @@ let PacketTypes =
 	sprite: 2,
 	sound: 3,
 	weather: 4,
-	name: 5
+	name: 5,
+	movementAnimationSpeed: 6
 }
 
 function Room (uid) {
@@ -26,7 +27,10 @@ function Room (uid) {
 		clients.add(socket);
 		socket.syncObject = new SyncObject();
 		syncObjects.add(socket.syncObject);
+		if(socket.name)
+			socket.syncObject.SetName(socket.name);
 		self.SyncAllForPlayer(socket);
+		self.SyncPlayerForAll(socket);
 	}
 
 	this.Disconnect = function(discsocket) {
@@ -40,14 +44,14 @@ function Room (uid) {
 
 	this.SyncAllForPlayer = function(syncsocket) {
 		for(let socket of clients)
-			if(socket.uuid != syncsocket.uuid)
+			if(socket.uuid != syncsocket.uuid  && !ClientsStorage.IsClientIgnoredByClientInGame(socket, syncsocket))
 				syncsocket.send(JSON.stringify(socket.syncObject.GetFullSyncData()));
 	}
 
 	this.SyncPlayerForAll = function(syncsocket) {
 		let syncPacket = JSON.stringify(syncsocket.syncObject.GetSyncData());
 		for(let socket of clients) {
-			if(socket.uuid != syncsocket.uuid && !ClientsStorage.SessionClients[syncsocket.address].gameignores.includes(syncsocket.trip))
+			if(socket.uuid != syncsocket.uuid && !ClientsStorage.IsClientIgnoredByClientInGame(syncsocket, socket))
 				socket.send(syncPacket);
 		}
 		syncsocket.syncObject.ClearSyncData();
@@ -63,6 +67,7 @@ function Room (uid) {
 
 	this.ProcessPacket = function(socket, data) {
 		let packet;
+		if(data.readUInt16LE) {
 		switch(data.readUInt16LE(0)) {
 			case PacketTypes.movement:
 				let movementData = ParseMovementPacket(data);
@@ -146,9 +151,26 @@ function Room (uid) {
 						}
 					});
 				}
+			break;
+			case PacketTypes.movementAnimationSpeed:
+				let movementSpeedData = ParseMovementSpeedPacket(data);
+				if(movementSpeedData) {
+					socket.syncObject.SetMovementSpeed(movementSpeedData);
+				} else {
+					YNOnline.Network.logWarning({
+						tags: ["invalid packets"],
+						text: "invalid movement speed packet",
+						extra: {
+							socket: socket,
+							data: data
+						}
+					});
+				}
+			break;
 		}
 
 		self.SyncPlayerForAll(socket);
+		}
 	}
 
 	function ParseMovementPacket(data) {
@@ -198,6 +220,13 @@ function Room (uid) {
 	function ParseNamePacket(data) {
 		if(data.length > 2) {
 			return {name: data.toString().substr(2)};
+		}
+		return undefined;
+	}
+
+	function ParseMovementSpeedPacket(data) {
+		if(data.length == 4) {
+			return {movementAnimationSpeed: data.readUInt16LE(2)};
 		}
 		return undefined;
 	}

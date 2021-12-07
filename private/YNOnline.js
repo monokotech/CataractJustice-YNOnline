@@ -1,8 +1,9 @@
 require('./configuration');
-const Chat = require('./Chat');
+const Chat = require('./Network/Chat');
 const GameServer = require('./Network/GameServer');
 const ConnectionManager = require('./Network/ConnectionManager');
 const http = require('http');
+const https = require('https');
 const express = require('express');
 /*
 TO-DO:
@@ -24,17 +25,19 @@ Wishlist (in priority order):
 global.YNOnline = 
 {
 	Network: {
-		logWarning: function(args) {console.log(args.text);},
+		logWarning: function(args) {console.log(args);},
 		logEWarning: function(args) {console.log(args);}
 	}
 };
 
 let expressapp = express();
-expressapp.use(express.static('public'));
-YNOnline.Network.httpServer = http.createServer(expressapp).listen(config.port);
+expressapp.use(express.static(config.clientPath));
+if(config.https)
+	YNOnline.Network.server = https.createServer(config.credentials, expressapp).listen(config.port);
+else
+	YNOnline.Network.server = http.createServer(expressapp).listen(config.port);
 
-
-YNOnline.Network.globalChat = Chat.NewChat();
+YNOnline.Network.globalChat = new Chat();
 YNOnline.Network.gameServer = new GameServer();
 YNOnline.Network.connectionManager = new ConnectionManager();
 YNOnline.Network.connectionManager.AddService("game", YNOnline.Network.gameServer);
@@ -43,6 +46,6 @@ YNOnline.Network.connectionManager.AddService("globalChat", YNOnline.Network.glo
 
 YNOnline.Network.localChats = [];
 for(let i = 1; i < config.roomsRange.max; i++) {
-	YNOnline.Network.localChats.push(Chat.NewChat());
+	YNOnline.Network.localChats.push(new Chat());
 	YNOnline.Network.connectionManager.AddService("chat"+i, YNOnline.Network.localChats[i - 1]);
 }

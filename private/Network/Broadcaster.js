@@ -1,5 +1,6 @@
 
 const WebSocket = require('ws');
+const ClientsStorage = require('../ClientsStorage');
 
 function Broadcaster()
 {
@@ -35,7 +36,7 @@ function Broadcaster()
 			if(broadcaster.clientSockets.hasOwnProperty(uuid)) {
 				let socket = broadcaster.clientSockets[uuid];
 				
-				if(!broadsocket.storageInstance.chatignores.includes(socket.trip))
+				if(!ClientsStorage.IsClientIgnoredByClientInChat(broadsocket, socket))
 					socket.send(JSON.stringify(msg));
 			}
 		}

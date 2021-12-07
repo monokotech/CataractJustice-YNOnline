@@ -24,12 +24,12 @@ let helpData = {
 
 	ignorechat: {
 		tip: "ignore player chat messages by uuid, also ignores player by ip on server side",
-		help: "/ignorechat <uuid> you can display list of player uuids with /uuidlist or /uuid <tripcode>"
+		help: "/ignorechat <uuid> you can display list of player uuids with /getuuid or /getuuid <tripcode>"
 	},
 
 	ignoregame: {
 		tip: "ignore player in game by uuid, also ignores player by ip on server side",
-		help: "/ignoregame <uuid> you can display list of players uuid with /uuidlist or /uuid <tripcode>"
+		help: "/ignoregame <uuid> you can display list of players uuid with /getuuid or /getuuid <tripcode>"
 	},
 
 	getuuid: {
@@ -40,6 +40,16 @@ let helpData = {
 	pvol: {
 		tip: "sets other players sound effects volume (50% by default)",
 		help: "/pvol <volume> (number from 0 to 100)"
+	},
+
+	pardonchat: {
+		tip: "Lets you unignore players in chat",
+		help: "/pardonchat <uuid>"
+	},
+
+	pardongame: {
+		tip: "Lets you unignore players in game",
+		help: "/pardongame <uuid>"
 	}
 }
 

@@ -7,7 +7,9 @@ let commands = {
 	ignorechat: IgnoreChatCommand,
 	ignoregame: IgnoreGameCommand,
 	getuuid: GetUUIDCommand,
-	pvol: SetPlayersVolumeCommand
+	pvol: SetPlayersVolumeCommand,
+	pardonchat: PardonChatCommand,
+	pardongame: PardonGameCommand
 }
 
 

@@ -1,43 +1,45 @@
 const WebSocket = require('ws');
 const crypto = require('crypto');
 const ClientsStorage = require('../ClientsStorage');
+const Request = require('./RequestUtils');
 
 //ConnectionManager hosts web socket server and distributes ws connections between services
 function ConnectionManager() {
 	let manager = this;
 	let wsserver = new WebSocket.Server({
-		server: YNOnline.Network.httpServer
+		server: YNOnline.Network.server
 	});
 	let services = {};
+	let connections = {};
 
 	let onConnection = function(socket, req) 
 	{
+		socket.address = Request.GetAddress(req);
+		if(ClientsStorage.ActiveConnectionsCountOfAddress(socket.address) >= config.maxConnectionsPerAddress) {
+			socket.close();
+			return;
+		}
+
+		socket.uuid = crypto.randomUUID();
+		socket.name = config.defaultName;
+
+		//if socket doesn't send service name after 3 second, disconnect it
+		setTimeout(function() {
+			if(!socket.serviceName) {
+				socket.close();
+			}
+		}, 3000);
+
 		//after client connects to a websocket server, it has to send service name
   		socket.onmessage = function(e){
 			let serviceName = e.data.toString();
+
 			if(services[serviceName]) {
 				socket.serviceName = serviceName;
-				socket.uuid = crypto.randomUUID();
-				socket.address = req.socket.remoteAddress;
-				socket.name = config.defaultName;
-				
-				if(!ClientsStorage.SessionClients.sockets) {
-					ClientsStorage.SessionClients.sockets = {};
-				}
-
-				if(!ClientsStorage.SessionClients[req.socket.remoteAddress]) {
-					ClientsStorage.SessionClients[req.socket.remoteAddress] = {};
-					ClientsStorage.SessionClients[req.socket.remoteAddress].uuids = [];
-					ClientsStorage.SessionClients[req.socket.remoteAddress].chatignores = [];
-					ClientsStorage.SessionClients[req.socket.remoteAddress].gameignores = [];
-					ClientsStorage.SessionClients[req.socket.remoteAddress].sockets = {};
-				}
-
-				ClientsStorage.SessionClients[req.socket.remoteAddress].uuids.push(socket.uuid);
-				ClientsStorage.SessionClients.sockets[socket.uuid] = socket;
-				ClientsStorage.SessionClients[req.socket.remoteAddress].sockets[socket.uuid] = socket;
-				socket.storageInstance = ClientsStorage.SessionClients[req.socket.remoteAddress];
+				socket.storageInstance = ClientsStorage.RegisterConnection(socket);
 				services[serviceName].Connect(socket);
+
+				connections[socket.uuid] = socket;
 			}
 			else {
 				socket.close();
@@ -58,6 +60,25 @@ function ConnectionManager() {
 	this.AddService = function(serviceName, service) {
 		services[serviceName] = service;
 	}
+
+	if(config.shouldSendPings) {
+		setInterval(
+			function() {
+				let kl = Object.keys(connections);
+
+				for(let k of kl) {
+					if(connections[k].readyState == WebSocket.OPEN) {
+						connections[k].send("{ \"type\": \"ping\" }");
+					} else {
+						delete connections[k];
+					}
+				}
+			},
+			config.pingInterval_ms
+		);
+	}
 }
+
+
 
 module.exports = ConnectionManager;

@@ -87,6 +87,7 @@ function Chat (address, service, isglobal)
 	let preConnectionMessageQueue = [];
 	let socket = new WebSocket(address);
 	let chatType = "local";
+	let self = this;
 	if(isglobal)
 		chatType = "global";
 	
@@ -112,6 +113,9 @@ function Chat (address, service, isglobal)
 		case "serverInfo":
 			PrintChatInfo(data.text, "Server")
 		break;
+		case "ping":
+			self.SendMessage("{ \"type\": \"pong\" }");
+		break;
 		}
 	}
 
@@ -128,6 +132,14 @@ function Chat (address, service, isglobal)
 	}
 }
 
+function randomTripcode(len) {
+	let t = "";
+	let c = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTSUVWXYZ0123456789";
+	for(let i = 0; i < len; i++)
+		t += c[parseInt(Math.random() * c.length)];
+	return t;
+}
+
 //TO-DO: rename to something more neutral (SendProfileInfo() or smth) just in case anything is going to change
 function SendNameAndTripcode() {
 	
@@ -135,7 +147,7 @@ function SendNameAndTripcode() {
 		return;
 
 	if(tripInput.value === "") {
-		tripInput.value = crypto.randomUUID();
+		tripInput.value = randomTripcode(16);
 	}
 
 	enterChatForm.style.display = "none";
@@ -162,7 +174,8 @@ function ConnectToLocalChat(room) {
 	if(YNOnline.Network.localChat)
 		YNOnline.Network.localChat.Close();
 	YNOnline.Network.localChat = new Chat(WSAddress, "chat"+room);
-	YNOnline.Network.localChat.SendMessage(profilepacket);
+	if(profilepacket)
+		YNOnline.Network.localChat.SendMessage(profilepacket);
 }
 
 YNOnline.Network.globalChat = new Chat(WSAddress, "globalChat", true);
