@@ -4,8 +4,10 @@ global.config =
 {
 	//keep in mind that global chat, local chat and game itself have its own connections
 	maxConnectionsPerAddress: 12,
-
+	//use this for custom port
 	port: 443,
+	//use this for heroku
+	//port: process.env.PORT,
 	roomsRange: {min: 1, max: 500},
 	defaultSprite: {sheet: "000000000054", id: 0},
 	defaultName: "Mado",

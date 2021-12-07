@@ -1,7 +1,10 @@
 let port = 443;
-let WSAddress = "ws://" + window.location.hostname + ":" + port;
+let WSAddress = "wss://" + window.location.hostname + ":" + port;
+
 let YNOnline = {Network:{}};
 
+//comment this to stop pings
+////////
 setInterval(
 	function() {
 		if(WS.sockets[0])
@@ -10,3 +13,4 @@ setInterval(
 	},
 	15000
 );
+////////
