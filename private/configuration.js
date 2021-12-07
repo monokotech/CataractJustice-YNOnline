@@ -23,7 +23,7 @@ global.config =
 
 if(global.config.https) {
 	global.config.credentials = {
-		key: fs.readFileSync(keypath),
-		cert: fs.readFileSync(certpath),
+		key: fs.readFileSync(config.keypath),
+		cert: fs.readFileSync(config.certpath),
 	};
 }
