@@ -11,6 +11,9 @@ open configuration.js
 
 edit 'port' field of global.config object
 
+set 'https' to 'true' if you want to use https
+set key and cert paths
+
 ## Start your game server
 
 Use 'node YNOnline.js' to start game server
@@ -25,7 +28,4 @@ open ynonline.js
 
 edit 'WSAddress'
 
-## Host client
-
-Host client using any http/(https?) server
 
