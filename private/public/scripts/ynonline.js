@@ -2,7 +2,7 @@ let port = 443;
 let WSAddress = "ws://" + window.location.hostname + ":" + port;
 const urlParams = new URLSearchParams(window.location.search);
 let YNOnline = {Network:{}};
-
+Module = {};
 if(urlParams.get("game"))
 	Module.EASYRPG_GAME = urlParams.get("game");
 else
