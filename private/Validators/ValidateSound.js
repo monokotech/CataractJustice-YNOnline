@@ -1,18 +1,21 @@
 const fs = require('fs');
-const soundsDir =  config.gamePath + '/Sound/';
 
-let soundFileList = [];
+function SoundValidator (gameName) {
+const soundsDir =  config.gamesPath + "/" + gameName + '/Sound/';
+	let soundFileList = [];
 
-try {
-    soundFileList = fs.readdirSync(soundsDir);
+	try {
+    	soundFileList = fs.readdirSync(soundsDir);
 	for(let i = 0; i < soundFileList.length; i++)
 		soundFileList[i] = soundFileList[i].split('.')[0];
-} catch (err) {
-    console.log(err);
+	} catch (err) {
+   		console.log(err);
+	}
+
+	this.isValidSoundFile = function(sound) {
+		return soundFileList.includes(sound);
+	}
+
 }
 
-function isValidSoundFile(sound) {
-	return soundFileList.includes(sound);
-}
-
-module.exports = isValidSoundFile;
+module.exports = SoundValidator;

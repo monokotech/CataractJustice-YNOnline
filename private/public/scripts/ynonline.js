@@ -3,6 +3,7 @@ let WSAddress = "ws://" + window.location.hostname + ":" + port;
 const urlParams = new URLSearchParams(window.location.search);
 let gameName = "";//urlParams.get("game");
 let YNOnline = {Network:{}};
+Module.EASYRPG_GAME = window.location.pathname;
 
 //comment this to stop pings
 ////////

@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { config } = require('process');
 
 global.config =
 {
@@ -16,8 +17,8 @@ global.config =
 	keypath: "",
 	certpath: "",
 	clientPath: "public",
-	gamePath: "./public/play/games/default/",
-
+	gamesPath: "./public/play/games/",
+	
 	shouldSendPings: true,
 	pingInterval_ms: 15000
 }
@@ -28,3 +29,5 @@ if(global.config.https) {
 		cert: fs.readFileSync(config.certpath),
 	};
 }
+
+config.gamesList = fs.readdirSync(config.gamesPath);
