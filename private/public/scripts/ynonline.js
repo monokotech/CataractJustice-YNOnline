@@ -6,7 +6,7 @@ let YNOnline = {Network:{}};
 if(urlParams.get("game"))
 	Module.EASYRPG_GAME = urlParams.get("game");
 else
-	Module.EASYRPG_GAME = window.location.pathname;
+	Module.EASYRPG_GAME = window.location.pathname.replace('/', '');
 
 //comment this to stop pings
 ////////
