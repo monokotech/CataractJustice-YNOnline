@@ -92,7 +92,7 @@ function Chat (address, chatname, isglobal)
 		chatType = "global";
 	
 	socket.onopen = function(e) {
-		socket.send(Module.EASYRPG_GAME + "chat");
+		socket.send(gameName + "chat");
 		socket.send(chatname);
 
 		for(m of preConnectionMessageQueue) {
