@@ -5,9 +5,9 @@ let YNOnline = {Network:{}};
 let gameName = "";
 if(urlParams.get("game"))
 	gameName = urlParams.get("game");
-else
+else {
 	gameName = window.location.pathname.replaceAll('/', '');
-
+}
 //comment this to stop pings
 ////////
 setInterval(
