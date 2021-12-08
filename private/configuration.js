@@ -1,5 +1,4 @@
 const fs = require('fs');
-const { config } = require('process');
 
 global.config =
 {
@@ -7,9 +6,11 @@ global.config =
 	maxConnectionsPerAddress: 12,
 	//use this for custom port
 	port: 443,
+	
 	//use this for heroku
 	//port: process.env.PORT,
-	roomsRange: {min: 1, max: 500},
+
+	roomsRange: {min: 1, max: 8000}, //is there any ynfg with more rooms than y2?
 	defaultSprite: {sheet: "000000000054", id: 0},
 	defaultName: "Mado",
 

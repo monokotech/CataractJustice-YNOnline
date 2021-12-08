@@ -92,7 +92,7 @@ function Chat (address, chatname, isglobal)
 		chatType = "global";
 	
 	socket.onopen = function(e) {
-		socket.send(gameName + "chat");
+		socket.send(Module.EASYRPG_GAME + "chat");
 		socket.send(chatname);
 
 		for(m of preConnectionMessageQueue) {
@@ -179,7 +179,7 @@ function ConnectToLocalChat(room) {
 		YNOnline.Network.localChat.SendMessage(profilepacket);
 }
 
-YNOnline.Network.globalChat = new Chat(WSAddress, gameName + "gchat", true);
+YNOnline.Network.globalChat = new Chat(WSAddress, "gchat", true);
 YNOnline.Network.localChat = null;
 
 function initChat() {

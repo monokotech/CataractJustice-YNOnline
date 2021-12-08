@@ -1,7 +1,7 @@
 
 const SyncObject = require('./SyncObject');
-const Validators = require('../Validators/Validators');
 const ClientsStorage = require('../ClientsStorage');
+const Validators = require('../Validators/Validators');
 
 let PacketTypes =
 {
@@ -13,11 +13,12 @@ let PacketTypes =
 	movementAnimationSpeed: 6
 }
 
-function Room (uid) {
+function Room (uid, gameServer) {
 	this.uid = uid;
 	let syncObjects = new Set();
 	let clients = new Set();
 	let self = this;
+	console.log(gameServer);
 
 	this.PlayerCount = function() {
 		return clients.size;
@@ -178,7 +179,7 @@ function Room (uid) {
 		if(data.length > 4) {
 			let parsedData = {id: data.readUInt16LE(2), sheet: data.toString().substr(4)};
 			if(parsedData.id >= 0 && parsedData.id < 8) {
-				if(Validators.ValidateSpriteSheet(parsedData.sheet))
+				if(gameServer.spriteValidator.isValidSpriteSheet(parsedData.sheet))
 					return parsedData;
 			}
 		}
@@ -193,7 +194,7 @@ function Room (uid) {
 				parsedData.volume >= 0 && parsedData.volume <= 100 &&
 				parsedData.tempo >= 50 && parsedData.tempo <= 200
 			) {
-				if(Validators.ValidateSound(parsedData.name))
+				if(gameServer.soundValidator.isValidSoundFile(parsedData.name))
 					return parsedData;
 			}
 		}

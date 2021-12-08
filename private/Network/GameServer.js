@@ -1,9 +1,12 @@
+const SoundValidator = require('../Validators/ValidateSound');
+const SpriteValidator = require('../Validators/ValidateSpriteSheet');
 const Room = require('./Room');
-function GameServer() {
+function GameServer(gameName) {
 	let self = this;
 	this.clients = {};
 	let rooms = {};
-	gameServer = this;
+	this.soundValidator = new SoundValidator(gameName);
+	this.spriteValidator = new SpriteValidator(gameName);
 
 	this.Connect = function(socket) 
 	{	
@@ -16,7 +19,7 @@ function GameServer() {
 
 		socket.onmessage = function(e) {
 			let connectPacket = RoomConnectPacketParse(e.data);
-			
+
 			if(connectPacket) {
 				ConnectClientToRoom(socket, connectPacket.roomID)
 			}
@@ -54,7 +57,7 @@ function GameServer() {
 		if(isValidRoomId(roomID)) {
 			//create room if does not exist
 			if(!rooms[roomID]) {
-				rooms[roomID] = new Room(roomID);
+				rooms[roomID] = new Room(roomID, self);
 			}
 			socket.room = rooms[roomID];
 			socket.room.Connect(socket);

@@ -16,7 +16,8 @@ global.YNOnline =
 {
 	Network: {
 		logWarning: function(args) {console.log(args);},
-		logEWarning: function(args) {console.log(args);}
+		logEWarning: function(args) {console.log(args);},
+		gameServer: {}
 	}
 };
 
@@ -27,8 +28,10 @@ if(config.https)
 else
 	YNOnline.Network.server = http.createServer(expressapp).listen(config.port);
 
-YNOnline.Network.chatServer = new ChatServer();
-YNOnline.Network.gameServer = new GameServer();
 YNOnline.Network.connectionManager = new ConnectionManager();
-YNOnline.Network.connectionManager.AddService("game", YNOnline.Network.gameServer);
-YNOnline.Network.connectionManager.AddService("chat", YNOnline.Network.chatServer);
+
+for(let gameName of config.gamesList) {
+	YNOnline.Network.gameServer[gameName] = new GameServer(gameName);
+	YNOnline.Network.connectionManager.AddService(gameName + "game", YNOnline.Network.gameServer[gameName]);
+	YNOnline.Network.connectionManager.AddService(gameName + "chat", new ChatServer(gameName));
+}

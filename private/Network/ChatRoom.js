@@ -1,7 +1,7 @@
 const ClientsStorage = require('../ClientsStorage');
 const tripcode = require('tripcode');
 
-function ChatRoom() {
+function ChatRoom(gameName) {
 	let clients = new Set();
 	let self = this;
 
@@ -110,7 +110,7 @@ function ChatRoom() {
 	
 					if(msgjson.getuuid == "*") {
 						if(!isNaN(parseInt(msgjson.room))) {
-							let clients = YNOnline.Network.gameServer.GetRoomByID(parseInt(msgjson.room)).GetClients();
+							let clients = YNOnline.Network.gameServer[gameName].GetRoomByID(parseInt(msgjson.room)).GetClients();
 							for(let client of clients) {
 								responce += client.name;
 								responce += ": ";

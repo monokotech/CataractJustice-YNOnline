@@ -1,6 +1,6 @@
 const ChatRoom = require('./ChatRoom');
 
-function ChatServer () {
+function ChatServer (gameName) {
 	let chatRooms = {};
 	this.Connect = function (socket) {
 
@@ -8,7 +8,7 @@ function ChatServer () {
 			let roomName = e.data.toString();
 			
 			if(!chatRooms[roomName])
-				chatRooms[roomName] = new ChatRoom();
+				chatRooms[roomName] = new ChatRoom(gameName);
 
 			chatRooms[roomName].Connect(socket);
 			socket.chatRoomName = roomName;
