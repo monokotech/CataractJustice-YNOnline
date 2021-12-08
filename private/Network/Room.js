@@ -57,14 +57,6 @@ function Room (uid) {
 		syncsocket.syncObject.ClearSyncData();
 	}
 
-	let NewFullSyncData = function() {
-		let syncData = {type: "fullSync", data: []};
-		for(let syncObject of syncObjects) {
-			syncData.data.push(syncObject.GetFullSyncData());
-		}
-		return syncData;
-	}
-
 	this.ProcessPacket = function(socket, data) {
 		let packet;
 		if(data.readUInt16LE) {
@@ -174,6 +166,7 @@ function Room (uid) {
 	}
 
 	function ParseMovementPacket(data) {
+		//uint16 packet type, uint16 X, uint16_t Y
 		if(data.length == 6) {
 			return {x: data.readUInt16LE(2), y: data.readUInt16LE(4)};
 		}
@@ -181,6 +174,7 @@ function Room (uid) {
 	}
 
 	function ParseSpritePacket(data) {
+		//uint16 packet type, uint16 sprite 'id', string spritesheet
 		if(data.length > 4) {
 			let parsedData = {id: data.readUInt16LE(2), sheet: data.toString().substr(4)};
 			if(parsedData.id >= 0 && parsedData.id < 8) {
@@ -192,6 +186,7 @@ function Room (uid) {
 	}
 
 	function ParseSoundPacket(data) {
+		//uint16 packet type, uint16 volume, uint16 tempo, uint16 balance, string sound file
 		if(data.length > 8) {
 			let parsedData = {volume: data.readUInt16LE(2), tempo: data.readUInt16LE(4), balance: data.readUInt16LE(6), name: data.toString().substr(8)};
 			if(
@@ -207,6 +202,7 @@ function Room (uid) {
 	}
 
 	function ParseWeatherPacket(data) {
+		//uint16 packet type, uint16 weather type, uint16 weather strength
 		if(data.length == 6) {
 			let type = data.readUInt16LE(2);
 			let str = data.readUInt16LE(4);
@@ -218,6 +214,7 @@ function Room (uid) {
 	}
 
 	function ParseNamePacket(data) {
+		//uint16 packet type, string name
 		if(data.length > 2) {
 			return {name: data.toString().substr(2)};
 		}
@@ -225,6 +222,7 @@ function Room (uid) {
 	}
 
 	function ParseMovementSpeedPacket(data) {
+		//uint16 packet type, uint16 movement speed
 		if(data.length == 4) {
 			return {movementAnimationSpeed: data.readUInt16LE(2)};
 		}
@@ -235,6 +233,7 @@ function Room (uid) {
 		return {type: "disconnect", uuid: socket.syncObject.uid};
 	}
 
+	//returns uuid list of clients connected to that room, used for /getuuid command
 	this.GetUUIDs = function() {
 		let uuids = [];
 		for(let client of clients) {

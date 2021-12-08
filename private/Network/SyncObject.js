@@ -49,7 +49,7 @@ function SyncObject() {
 		self.movementAnimationSpeed = args.movementAnimationSpeed;
 		self.syncData.movementAnimationSpeed = args.movementAnimationSpeed;
 	}
-
+	//returns everything you need to sync player on room entering
 	this.GetFullSyncData = function() {
 		return { type: "objectSync", uid: self.uid, pos: self.pos, sprite: self.sprite, name: self.name, movementAnimationSpeed: self.movementAnimationSpeed};
 	}

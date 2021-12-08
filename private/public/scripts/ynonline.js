@@ -1,6 +1,7 @@
 let port = 443;
-let WSAddress = "wss://" + window.location.hostname + ":" + port;
-
+let WSAddress = "ws://" + window.location.hostname + ":" + port;
+const urlParams = new URLSearchParams(window.location.search);
+let gameName = "";//urlParams.get("game");
 let YNOnline = {Network:{}};
 
 //comment this to stop pings

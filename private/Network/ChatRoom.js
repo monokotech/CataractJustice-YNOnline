@@ -1,9 +1,13 @@
 const ClientsStorage = require('../ClientsStorage');
 const tripcode = require('tripcode');
 
-function Chat() {
+function ChatRoom() {
 	let clients = new Set();
 	let self = this;
+
+	this.ClientsCount = function() {
+		return clients.size;
+	}
 
 	function Broadcast(broadsocket, message) {
 		for(let socket of clients) {
@@ -145,16 +149,18 @@ function Chat() {
 				else {
 					socket.name = msgjson.name;
 					socket.trip = tripcode(msgjson.trip);
+					Broadcast(socket, JSON.stringify({type: "userConnect", name: socket.name, trip: socket.trip}));
+
 					//here im setting tripcode of every connection that has same IP to new received tripcode, which is stupid but i will not fix that until somebody will notice that
+					//im doing that so room code will get acces to tripcode of a user since tripcode needed to see if any user is ignored by this user
 					let allsocks = ClientsStorage.SessionClients[socket.address].uuids;
 					for(let s of allsocks) {
 						ClientsStorage.SessionClients[socket.address].sockets[s].trip = socket.trip;
 					}
-					Broadcast(socket, JSON.stringify({type: "userConnect", name: socket.name, trip: socket.trip}));
 				}
 			}
 		}
 	}
 }
 
-module.exports = Chat;
+module.exports = ChatRoom;

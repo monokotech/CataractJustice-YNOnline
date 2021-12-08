@@ -1,5 +1,5 @@
 const Room = require('./Room');
-function GameServer(port) {
+function GameServer() {
 	let self = this;
 	this.clients = {};
 	let rooms = {};
@@ -13,8 +13,10 @@ function GameServer(port) {
 		}));
 
 		self.clients[socket.uuid] = socket;
+
 		socket.onmessage = function(e) {
 			let connectPacket = RoomConnectPacketParse(e.data);
+			
 			if(connectPacket) {
 				ConnectClientToRoom(socket, connectPacket.roomID)
 			}
@@ -23,7 +25,7 @@ function GameServer(port) {
 					socket.room.ProcessPacket(socket, e.data);
 				}
 				else {
-					//something is wrong if we get here since , either someone is messing with packets, or client is not working properly
+					//something is wrong if we get here, either someone is messing with packets, or client is not working properly
 					YNOnline.Network.logWarning({
 						category: "invalid packets", 
 						text: "client is not connected to any room and tries to send not a room connection packet", 
@@ -48,7 +50,7 @@ function GameServer(port) {
 	}
 
 	function ConnectClientToRoom(socket, roomID) {
-		DisconnectClientFromRoom(socket, roomID);
+		DisconnectClientFromRoom(socket);
 		if(isValidRoomId(roomID)) {
 			//create room if does not exist
 			if(!rooms[roomID]) {

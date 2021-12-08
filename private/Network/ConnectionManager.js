@@ -24,6 +24,7 @@ function ConnectionManager() {
 		socket.name = config.defaultName;
 
 		//if socket doesn't send service name after 3 second, disconnect it
+		//to-do: add timeout to receive service name setting to configuration.js
 		setTimeout(function() {
 			if(!socket.serviceName) {
 				socket.close();
@@ -60,7 +61,7 @@ function ConnectionManager() {
 	this.AddService = function(serviceName, service) {
 		services[serviceName] = service;
 	}
-
+	//shitty ping system but it was needed only for heroku hosting anyway?
 	if(config.shouldSendPings) {
 		setInterval(
 			function() {

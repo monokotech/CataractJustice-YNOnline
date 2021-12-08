@@ -82,7 +82,7 @@ function onNewChatEntry() {
 	}
 }
 
-function Chat (address, service, isglobal) 
+function Chat (address, chatname, isglobal) 
 {
 	let preConnectionMessageQueue = [];
 	let socket = new WebSocket(address);
@@ -92,7 +92,8 @@ function Chat (address, service, isglobal)
 		chatType = "global";
 	
 	socket.onopen = function(e) {
-		socket.send(service);
+		socket.send(gameName + "chat");
+		socket.send(chatname);
 
 		for(m of preConnectionMessageQueue) {
 			socket.send(m);
@@ -178,7 +179,7 @@ function ConnectToLocalChat(room) {
 		YNOnline.Network.localChat.SendMessage(profilepacket);
 }
 
-YNOnline.Network.globalChat = new Chat(WSAddress, "globalChat", true);
+YNOnline.Network.globalChat = new Chat(WSAddress, gameName + "gchat", true);
 YNOnline.Network.localChat = null;
 
 function initChat() {
