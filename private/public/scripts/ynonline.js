@@ -2,11 +2,11 @@ let port = 443;
 let WSAddress = "ws://" + window.location.hostname + ":" + port;
 const urlParams = new URLSearchParams(window.location.search);
 let YNOnline = {Network:{}};
-Module = {};
+let gameName = "";
 if(urlParams.get("game"))
-	Module.EASYRPG_GAME = urlParams.get("game");
+	gameName = urlParams.get("game");
 else
-	Module.EASYRPG_GAME = window.location.pathname.replaceAll('/', '');
+	gameName = window.location.pathname.replaceAll('/', '');
 
 //comment this to stop pings
 ////////
