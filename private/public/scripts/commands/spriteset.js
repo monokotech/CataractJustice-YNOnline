@@ -1,5 +1,5 @@
 
-let spriteSheetList = [
+let spriteSheetList = {yumenikki:[
 	"000000000054",
 	"000000000053",
 	"0000000000000000000029",
@@ -76,22 +76,31 @@ let spriteSheetList = [
 	"0000000000000095",
 	"0000000000000096",
 	"0000000000000097"
-];
+],
+yume2kki:[
 
-let spriteList = {
-	monoe: {sheet: "000000000054", id: 0},
-	monoko: {sheet: "000000000053", id: 3},
-	boombox: {sheet: "000000000047", id: 0},
-	tv: {sheet: "000000000054", id: 5},
-	poniko: {sheet: "000000000056", id: 4},
-	uboa: {sheet: "000000000056", id: 5},
-	masada: {sheet: "000000000056", id: 6}
+]
+};
+
+let spriteList = { 
+	yumenikki: {
+		monoe: {sheet: "000000000054", id: 0},
+		monoko: {sheet: "000000000053", id: 3},
+		boombox: {sheet: "000000000047", id: 0},
+		tv: {sheet: "000000000054", id: 5},
+		poniko: {sheet: "000000000056", id: 4},
+		uboa: {sheet: "000000000056", id: 5},
+		masada: {sheet: "000000000056", id: 6}
+	},
+	yume2kki: {
+
+	}
 }
 
 function SpriteListCommand(args) {
 	let liststr = "";
-	let keys = Object.keys(spriteList);
-
+	let keys = Object.keys(spriteList[gameName]);
+	liststr += "default\n";
 	for(let k of keys) {
 		liststr += k + "\n";
 	}
@@ -102,9 +111,10 @@ function SpriteListCommand(args) {
 
 function SpriteSetCommand(args) {
 	if(args.length == 2) {
-		let sprite = spriteList[args[1]];
+		let sprite = spriteList[gameName][args[1]];
+		if(args[1] == "default")
+			sprite = {sheet: "", id: 0};
 		if(sprite) {
-
 			sheet = Module.allocate(Module.intArrayFromString(sprite.sheet), Module.ALLOC_NORMAL);
   			Module._SlashCommandSetSprite(sheet, sprite.id);
   			Module._free(sheet);
@@ -117,8 +127,7 @@ function SpriteSetCommand(args) {
 		let id = parseInt(args[2]);
 
 		if(!isNaN(id) || id < 0 || id > 7) {
-			if(spriteSheetList.includes(args[1])) {
-				
+			if(spriteSheetList[gameName].includes(args[1]) || spriteSheetList[gameName].length == 0) {	
 				sheet = Module.allocate(Module.intArrayFromString(args[1]), Module.ALLOC_NORMAL);
   				Module._SlashCommandSetSprite(sheet, id);
   				Module._free(sheet);
