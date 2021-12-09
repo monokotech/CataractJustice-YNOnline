@@ -174,6 +174,7 @@ function Room (uid, gameServer) {
 				}
 			break;
 			case PacketTypes.variable:
+			return;
 				let variableData = ParseVariableSetPacket(data);
 				if(variableData) {
 					socket.syncObject.SetVariable(variableData);
