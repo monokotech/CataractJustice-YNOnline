@@ -76,9 +76,6 @@ let spriteSheetList = {yumenikki:[
 	"0000000000000095",
 	"0000000000000096",
 	"0000000000000097"
-],
-yume2kki:[
-
 ]
 };
 
@@ -91,9 +88,6 @@ let spriteList = {
 		poniko: {sheet: "000000000056", id: 4},
 		uboa: {sheet: "000000000056", id: 5},
 		masada: {sheet: "000000000056", id: 6}
-	},
-	yume2kki: {
-
 	}
 }
 
@@ -131,7 +125,10 @@ function SpriteSetCommand(args) {
 		let id = parseInt(args[2]);
 
 		if(!isNaN(id) || id < 0 || id > 7) {
-			if(spriteSheetList[gameName].includes(args[1]) || spriteSheetList[gameName].length == 0) {	
+			let valid = !spriteList[gameName] || spriteSheetList[gameName].length == 0;
+			if(!valid)
+				valid = spriteSheetList[gameName].includes(args[1]);
+			if(valid) {	
 				sheet = Module.allocate(Module.intArrayFromString(args[1]), Module.ALLOC_NORMAL);
   				Module._SlashCommandSetSprite(sheet, id);
   				Module._free(sheet);
