@@ -1,5 +1,6 @@
 
-let spriteSheetList = {yumenikki:[
+let spriteSheetList = {
+	nikki:[
 	"000000000054",
 	"000000000053",
 	"0000000000000000000029",
@@ -80,7 +81,7 @@ let spriteSheetList = {yumenikki:[
 };
 
 let spriteList = { 
-	yumenikki: {
+	nikki: {
 		monoe: {sheet: "000000000054", id: 0},
 		monoko: {sheet: "000000000053", id: 3},
 		boombox: {sheet: "000000000047", id: 0},
