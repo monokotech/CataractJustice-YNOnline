@@ -98,6 +98,8 @@ let spriteList = {
 }
 
 function SpriteListCommand(args) {
+	if(!spriteList[gameName])
+		return;
 	let liststr = "";
 	let keys = Object.keys(spriteList[gameName]);
 	liststr += "default\n";
@@ -111,6 +113,8 @@ function SpriteListCommand(args) {
 
 function SpriteSetCommand(args) {
 	if(args.length == 2) {
+		if(!spriteList[gameName])
+			return;
 		let sprite = spriteList[gameName][args[1]];
 		if(args[1] == "default")
 			sprite = {sheet: "", id: 0};
