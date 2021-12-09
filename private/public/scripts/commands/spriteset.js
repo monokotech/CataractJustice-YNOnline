@@ -93,13 +93,15 @@ let spriteList = {
 }
 
 function SpriteListCommand(args) {
-	if(!spriteList[gameName])
-		return;
 	let liststr = "";
-	let keys = Object.keys(spriteList[gameName]);
-	liststr += "default\n";
-	for(let k of keys) {
-		liststr += k + "\n";
+	if(!spriteList[gameName]) {
+		liststr = "default";
+	} else {
+		let keys = Object.keys(spriteList[gameName]);
+		liststr += "default\n";
+		for(let k of keys) {
+			liststr += k + "\n";
+		}
 	}
 
 	PrintChatInfo(liststr, "SpriteList");
