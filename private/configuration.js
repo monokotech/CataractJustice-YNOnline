@@ -12,7 +12,7 @@ global.config =
 
 	roomsRange: {min: 1, max: 8000}, //is there any ynfg with more rooms than y2?
 	defaultSprite: {sheet: "000000000054", id: 0},
-	defaultName: "Mado",
+	defaultName: "",
 
 	https: false,
 	keypath: "",

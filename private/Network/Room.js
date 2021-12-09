@@ -10,7 +10,9 @@ let PacketTypes =
 	sound: 3,
 	weather: 4,
 	name: 5,
-	movementAnimationSpeed: 6
+	movementAnimationSpeed: 6,
+	variable: 7,
+	switchsync: 8
 }
 
 function Room (uid, gameServer) {
@@ -18,7 +20,6 @@ function Room (uid, gameServer) {
 	let syncObjects = new Set();
 	let clients = new Set();
 	let self = this;
-	console.log(gameServer);
 
 	this.PlayerCount = function() {
 		return clients.size;
@@ -28,10 +29,14 @@ function Room (uid, gameServer) {
 		clients.add(socket);
 		socket.syncObject = new SyncObject();
 		syncObjects.add(socket.syncObject);
-		if(socket.name)
-			socket.syncObject.SetName(socket.name);
+		if(socket.name) {
+			socket.syncObject.SetName({name: socket.name});
+		}	else {
+			socket.syncObject.SetName({name:  config.defaultName});
+			socket.name = {name:  config.defaultName};
+		}
 		self.SyncAllForPlayer(socket);
-		self.SyncPlayerForAll(socket);
+		self.FullSyncPlayerForAll(socket);
 	}
 
 	this.Disconnect = function(discsocket) {
@@ -56,6 +61,14 @@ function Room (uid, gameServer) {
 				socket.send(syncPacket);
 		}
 		syncsocket.syncObject.ClearSyncData();
+	}
+
+	this.FullSyncPlayerForAll = function(syncsocket) {
+		let syncPacket = JSON.stringify(syncsocket.syncObject.GetFullSyncData());
+		for(let socket of clients) {
+			if(socket.uuid != syncsocket.uuid && !ClientsStorage.IsClientIgnoredByClientInGame(syncsocket, socket))
+				socket.send(syncPacket);
+		}
 	}
 
 	this.ProcessPacket = function(socket, data) {
@@ -160,6 +173,36 @@ function Room (uid, gameServer) {
 					});
 				}
 			break;
+			case PacketTypes.variable:
+				let variableData = ParseVariableSetPacket(data);
+				if(variableData) {
+					socket.syncObject.SetVariable(variableData);
+				} else {
+					YNOnline.Network.logWarning({
+						tags: ["invalid packets"],
+						text: "invalid variable packet",
+						extra: {
+							socket: socket,
+							data: data
+						}
+					});
+				}
+			break;
+			case PacketTypes.switchsync:
+				let switchsyncData = ParseSwitchSetPacket(data);
+				if(switchsyncData) {
+					socket.syncObject.SetSwitch(switchsyncData);
+				} else {
+					YNOnline.Network.logWarning({
+						tags: ["invalid packets"],
+						text: "invalid switch packet",
+						extra: {
+							socket: socket,
+							data: data
+						}
+					});
+				}
+			break;
 		}
 
 		self.SyncPlayerForAll(socket);
@@ -226,6 +269,22 @@ function Room (uid, gameServer) {
 		//uint16 packet type, uint16 movement speed
 		if(data.length == 4) {
 			return {movementAnimationSpeed: data.readUInt16LE(2)};
+		}
+		return undefined;
+	}
+
+	function ParseVariableSetPacket(data) {
+		//uint16 packet type, uint32 var id, int32 value
+		if(data.length == 10) {
+			return {id: data.readUInt32LE(2), value: data.readUInt32LE(6)};
+		}
+		return undefined;
+	}
+
+	function ParseSwitchSetPacket(data) {
+		//uint16 packet type, uint32 switch id, int32 value
+		if(data.length == 10) {
+			return {id: data.readUInt32LE(2), value: data.readUInt32LE(6)};
 		}
 		return undefined;
 	}

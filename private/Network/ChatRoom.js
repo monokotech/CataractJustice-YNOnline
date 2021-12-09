@@ -129,7 +129,8 @@ function ChatRoom(gameName) {
 					socket.send(JSON.stringify({type: "serverInfo", text: responce}));
 					return;
 				}
-				Broadcast(socket, JSON.stringify({type: "userMessage", text: msgjson.text, name: socket.name, trip: socket.trip}));
+				if(msgjson.text)
+					Broadcast(socket, JSON.stringify({type: "userMessage", text: msgjson.text, name: socket.name, trip: socket.trip}));
 			}
 			else {
 				if(typeof msgjson.name != "string" || typeof msgjson.trip != "string") {

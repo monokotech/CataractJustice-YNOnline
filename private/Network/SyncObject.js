@@ -1,15 +1,16 @@
 const crypto = require('crypto');
 
 function SyncObject() {
-	let self = this;
 	this.uid = crypto.randomUUID();
 	this.pos = {x: 0, y: 0};
-	this.sprite = {sheet: "000000000054", id: 0};
-	this.sound = config.defauldSprite;
+	this.sprite = config.defauldSprite;
+	this.sound = {};
 	this.name = config.defaultName;
 	this.movementAnimationSpeed = 2;
 
-	this.syncData = {type: "objectSync", uid: this.uid, pos: this.pos, name: this.name};
+	let self = this;
+
+	this.syncData = {type: "objectSync", uid: this.uid, pos: this.pos};
 
 	this.SetPosition = function(args) {
 		self.pos.x = args.x;
@@ -48,6 +49,16 @@ function SyncObject() {
 	this.SetMovementSpeed = function(args) {
 		self.movementAnimationSpeed = args.movementAnimationSpeed;
 		self.syncData.movementAnimationSpeed = args.movementAnimationSpeed;
+	}
+
+	this.SetVariable = function(args) {
+		self.variable = args;
+		self.syncData.variable = args;
+	}
+
+	this.SetSwitch = function(args) {
+		self.switchsync = args;
+		self.syncData.switchsync = args;
 	}
 	//returns everything you need to sync player on room entering
 	this.GetFullSyncData = function() {
