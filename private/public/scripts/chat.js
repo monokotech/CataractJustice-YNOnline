@@ -10,6 +10,14 @@ let chatInput = document.getElementById("chatInput")
 
 let profilepacket;
 
+let globalMessagesToggle = document.getElementById("globalMessagesToggle");
+globalMessagesToggle.onclick = function(){
+	let globalMessages = document.getElementsByClassName("G");
+	for(let m of globalMessages) {
+		m.style.display = m.style.display == "none" ? "block" : "none";
+	}
+}
+
 function SendMessage() {
   if (chatInput.value === "") {
     return;
@@ -65,7 +73,7 @@ function PrintChatInfo(text, source) {
 	let infoTextContainer = document.createElement("div");
 	let infoSourceContainer = document.createElement("div");
 	infoContainer.className = "InfoContainer";
-	infoSourceContainer.innerText = "InfoSourceContainer";
+	infoSourceContainer.className = "InfoSourceContainer";
 	infoTextContainer.className = "InfoTextContainer";
 	infoTextContainer.innerText = text;
 	infoSourceContainer.innerText = source + ":";
@@ -86,10 +94,12 @@ function Chat (address, chatname, isglobal)
 {
 	let preConnectionMessageQueue = [];
 	let socket = new WebSocket(address);
-	let chatType = "local";
+	let chatType = "L";
+	this.isglobal = isglobal;
 	let self = this;
+
 	if(isglobal)
-		chatType = "global";
+		chatType = "G";
 	
 	socket.onopen = function(e) {
 		socket.send(gameName + "chat");
@@ -109,7 +119,16 @@ function Chat (address, chatname, isglobal)
 			NewChatMessage(data, chatType);
 		break;
 		case "userConnect":
-			PrintChatInfo("User " + data.name + "!" + data.trip + " joined the chat.", "Server");
+		if(self.isglobal)
+			PrintChatInfo(" " + data.name + " joined chat.", "Server");
+		else
+			PrintChatInfo(" " + data.name + " joined this room.", "Server");
+		break;
+		case "roomDisconnect":
+		if(self.isglobal)
+			PrintChatInfo(" " + data.name + " left.", "Server");
+		else
+			PrintChatInfo(" " + data.name + " left this room.", "Server");
 		break;
 		case "serverInfo":
 			PrintChatInfo(data.text, "Server")
@@ -151,7 +170,7 @@ function SendNameAndTripcode() {
 		tripInput.value = randomTripcode(16);
 	}
 
-	enterChatForm.style.display = "none";
+	document.getElementById("enterChatContainer").style.display = "none";
 	chatInputContainer.style.display = "block";
 	chatInput.disabled = false;
 

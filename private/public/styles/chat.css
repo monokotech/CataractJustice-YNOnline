@@ -4,6 +4,23 @@
   font-size: 16px;
 }
 
+button {
+	background-color: rgb(24,24,24);
+	width: calc(100% - 24px);
+	border: 12px transparent;
+	color: white;
+	margin: 12px;
+	padding: 12px;
+}
+
+button:hover {
+	background-color: rgb(32,32,32);
+}
+
+button:active {
+	background-color: rgb(8,8,8);
+}
+
 #chatbox {
   display: flex;
   flex-direction: column;
@@ -104,6 +121,11 @@ input[type='text'], select {
 
 	.InfoTextContainer {
 		color: teal;
+		display: inline-block;
+	}
+
+	.InfoSourceContainer {
+		display: inline-block;
 	}
 /*
 	.InfoSourceContainer {
