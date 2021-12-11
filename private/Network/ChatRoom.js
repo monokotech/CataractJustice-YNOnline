@@ -23,9 +23,9 @@ function ChatRoom(gameName) {
 	{	
 		if(socket.name && socket.trip) {
 			Broadcast(socket, {
-				type: "serverInfo",
-				category: "roomDisconnectInfo",
-				text: "Player " + socket.name + "!"+ socket.trip +" left this room."
+				type: "roomDisconnect",
+				name: socket.name,
+				trip: socket.trip
 			});
 		}
 		clients.delete(socket);
