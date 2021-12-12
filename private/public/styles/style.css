@@ -1,63 +1,69 @@
-	html, input[type='text'], select {
-      color: rgba(216, 216, 216, 1) !important; /*base*/
-      background-color: rgb(16, 16, 16);
-    }
-    
-    #controls button path {
-      stroke: rgba(216, 216, 216, 1) !important; /*base*/
-    }
 
-	body {
-		display: block;
-	}
+:root {
+	
+	--base-bg-color: rgb(16,16,16);
+	--text-area-bg-color: rgb(8,8,8);
+	--base-text-color: white;
+	--element-bg-color: rgb(24,24,24);
+	--selected-bg-color: rgb(32,32,32);
+	--border-color: rgb(24,24,24);
+	--input-border-color: rgb(16,16,16);
+	--link-color: rgb(255,255,150);
+	--active-bg-color: rgb(8,8,8);
+	--global-chat-display: block;
+	--text-colot: white;
+	/*
+	--base-bg-color: rgb(255,255,255);
+	--text-area-bg-color: rgb(240,240,240);
+	--base-text-color: rgb(8,8,8);
+	--element-bg-color: rgb(245,245,245);
+	--selected-bg-color: rgb(240,240,240);
+	--border-color: rgb(245,245,245);
+	--input-border-color: rgb(250,250,250);
+	--link-color: rgb(25,128,128);
+	--active-bg-color: rgb(255,255,255);
+	--global-chat-display: block;
+	--text-colot: white;
+	*/
+}
 
-	#layout {
-		width: 100%;
-		height: 60%;
-		margin-right: auto;
-		margin-left: auto;
-		margin-top: 0px;
-		margin-bottom: 0px;
-		display: flex;
-	}
+html{
+	font-family: 'MS PGothic', 'PGothic';
+	font-size: 16px;
+	color: var(--base-text-color);
+	background-color: var(--base-bg-color);
+}
 
-    a {
-      color: rgba(255, 255, 157, 1); /*alt*/
-    }
-  
-    input[type='text'], select {
-      border: 12px solid transparent;
-      color: rgba(216, 216, 216, 1) !important; /*base*/
-      background-color: rgb(8,8,8) !important; /*basebg*/
-      text-shadow: 1.5px 1.5px black; /*shadow*/
-    }
+#controls button path {
+	stroke: rgba(216, 216, 216, 1) !important; /*base*/
+}
 
-	#game_container {
-		width: 100%;
-		max-width: 800px;
-		display: block;
-	}
+#layout {
+	width: 100%;
+	display: flex;
+}
 
-	#chatboxContainer {
-		display: flex;
-		width: calc(100% - 805px);
-		min-width: 400px;
-		border-style: dashed;
-		border-color: rgb(24, 24, 24);
-		border-width: 2px;
-	}
+a {
+  color: var(--link-color);
+}
 
-	#main_container {
-		margin-right: auto;
-		margin-left: auto;
-		margin-top: 64px;
-		margin-bottom: 0px;
-		width: 100%;
-		max-width: 1208px;
-		display: flex;
-		flex-wrap: wrap;
-		overflow: hidden;
-		border-color: rgb(24, 24, 24);
-		border-style: dashed;
-		border-width: 2px;
-	}
+#game_container {
+	width: 79%;
+	height: 800px;
+	display: block;
+}
+
+#main_container {
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 64px;
+	margin-bottom: 0px;
+	width: 100%;
+	display: flex;
+	align-items: stretch;
+	flex-wrap: wrap;
+	overflow: hidden;
+	border-color: rgb(24, 24, 24);
+	border-style: dashed;
+	border-width: 2px;
+}

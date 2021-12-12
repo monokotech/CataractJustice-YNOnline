@@ -5,6 +5,7 @@ const ConnectionManager = require('./Network/ConnectionManager');
 const http = require('http');
 const https = require('https');
 const express = require('express');
+const ServerListing = require('./Network/ServerListing');
 /*
 TO-DO:
 	-add chat rooms instead of creating a bunch of chats on startup
@@ -35,3 +36,5 @@ for(let gameName of config.gamesList) {
 	YNOnline.Network.connectionManager.AddService(gameName + "game", YNOnline.Network.gameServer[gameName]);
 	YNOnline.Network.connectionManager.AddService(gameName + "chat", new ChatServer(gameName));
 }
+
+YNOnline.Network.connectionManager.AddService("listing", new ServerListing());

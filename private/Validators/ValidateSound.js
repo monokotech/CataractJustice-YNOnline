@@ -2,8 +2,8 @@ const fs = require('fs');
 
 function SoundValidator(gameName) {
 	const soundsDir = config.gamesPath + "/" + gameName + '/Sound/';
-	let soundFileList;
-
+	let soundFileList = [];
+	if(config.gamesList.includes(gameName)) {
 	try {
     	soundFileList = fs.readdirSync(soundsDir);
 		for(let i = 0; i < soundFileList.length; i++)
@@ -11,9 +11,10 @@ function SoundValidator(gameName) {
 	} catch (err) {
    		console.log(err);
 	}
+	}
 
 	this.isValidSoundFile = function(sound) {
-		return soundFileList.includes(sound);
+		return soundFileList.includes(sound) || soundFileList.length == 0;
 	}
 }
 

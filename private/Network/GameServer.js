@@ -5,11 +5,17 @@ function GameServer(gameName) {
 	let self = this;
 	this.clients = {};
 	let rooms = {};
+	let playerCount = 0;
 	this.soundValidator = new SoundValidator(gameName);
 	this.spriteValidator = new SpriteValidator(gameName);
 
+	this.PlayerCount = function() {
+		return playerCount;
+	}
+
 	this.Connect = function(socket) 
 	{	
+		playerCount++;
 		socket.send(JSON.stringify({
 			type: "connection",
 			uuid: socket.uuid
@@ -41,6 +47,7 @@ function GameServer(gameName) {
 	}
 
 	this.Disconnect = function(socket) {
+		playerCount--;
 		DisconnectClientFromRoom(socket);
 		delete self.clients[socket.uuid];
 	}

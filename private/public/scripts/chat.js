@@ -11,11 +11,11 @@ let chatInput = document.getElementById("chatInput")
 let profilepacket;
 
 let globalMessagesToggle = document.getElementById("globalMessagesToggle");
+let globalChatDisplayed = true;
+
 globalMessagesToggle.onclick = function(){
-	let globalMessages = document.getElementsByClassName("G");
-	for(let m of globalMessages) {
-		m.style.display = m.style.display == "none" ? "block" : "none";
-	}
+	globalChatDisplayed = !globalChatDisplayed;
+	document.querySelector(':root').style.setProperty('--global-chat-display', globalChatDisplayed ? 'block' : 'none');
 }
 
 function SendMessage() {
@@ -210,13 +210,15 @@ function initChat() {
 }
 
 window.onresize = function(event) {
-    if(document.documentElement.clientWidth < 1200) {
+    if(document.documentElement.clientWidth < 1190) {
 		document.getElementById("chatboxContainer").style.width = "100%";
 		document.getElementById("game_container").style.width = "100%";
 		document.getElementById("game_container").style.maxWidth = "100%";
 	} else {
-		document.getElementById("chatboxContainer").style.width = "calc(100% - 805px)";
+		document.getElementById("chatboxContainer").style.width = "calc(100% - 71%)";
 		document.getElementById("game_container").style.width = "100%";
-		document.getElementById("game_container").style.maxWidth = "800px";
+		document.getElementById("game_container").style.maxWidth = "70%";
 	}
 };
+
+window.onresize();
