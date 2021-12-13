@@ -34,7 +34,6 @@ function GameServer(gameName) {
 					socket.room.ProcessPacket(socket, e.data);
 				}
 				else {
-					//something is wrong if we get here, either someone is messing with packets, or client is not working properly
 					YNOnline.Network.logWarning({
 						category: "invalid packets", 
 						text: "client is not connected to any room and tries to send not a room connection packet", 

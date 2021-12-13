@@ -79,7 +79,7 @@ function ChatRoom(gameName) {
 				}
 
 				if(msgjson.ignorechat) {
-					if(msgjson.ignorechat.uuid && typeof msgjson.ignorechat.uuid === "string") {
+					if(typeof msgjson.ignorechat.uuid === "string") {
 						let ignoredSocket = ClientsStorage.SessionClients.sockets[msgjson.ignorechat.uuid];
 						if(ignoredSocket) {
 							ignoredSocket.storageInstance.chatignores.push(socket.trip)
@@ -92,7 +92,7 @@ function ChatRoom(gameName) {
 				}
 
 				if(msgjson.ignoregame) {
-					if(msgjson.ignoregame.uuid && typeof msgjson.ignoregame.uuid === "string") {
+					if(typeof msgjson.ignoregame.uuid === "string") {
 						let ignoredSocket = ClientsStorage.SessionClients.sockets[msgjson.ignoregame.uuid];
 						if(ignoredSocket) {
 							ignoredSocket.storageInstance.gameignores.push(socket.trip)
@@ -118,7 +118,7 @@ function ChatRoom(gameName) {
 								responce += "\n";
 							}
 						}
-					} else {
+					} else if(typeof msgjson === "string"){
 						for(let client of clients) {
 							if(client.trip === msgjson.getuuid) {
 								responce = client.uuid;
@@ -129,11 +129,11 @@ function ChatRoom(gameName) {
 					socket.send(JSON.stringify({type: "serverInfo", text: responce}));
 					return;
 				}
-				if(msgjson.text)
+				if(typeof msgjson.text === "string")
 					Broadcast(socket, JSON.stringify({type: "userMessage", text: msgjson.text, name: socket.name, trip: socket.trip}));
 			}
 			else {
-				if(typeof msgjson.name != "string" || typeof msgjson.trip != "string") {
+				if(typeof msgjson.name !== "string" || typeof msgjson.trip !== "string") {
 					YNOnline.Network.logWarning({
 						tags: [
 							"invalid packets",

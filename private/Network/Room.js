@@ -173,6 +173,7 @@ function Room (uid, gameServer) {
 					});
 				}
 			break;
+			//there was a problem with 2kki when it would set some variable every frame
 			case PacketTypes.variable:
 			return;
 				let variableData = ParseVariableSetPacket(data);
