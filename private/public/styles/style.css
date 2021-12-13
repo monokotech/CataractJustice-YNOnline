@@ -50,14 +50,14 @@ a {
 
 #game_container {
 	width: 79%;
-	height: 800px;
+	height: 640px;
 	display: block;
 }
 
 #main_container {
 	margin-right: auto;
 	margin-left: auto;
-	margin-top: 64px;
+	margin-top: 32px;
 	margin-bottom: 0px;
 	width: 100%;
 	display: flex;
