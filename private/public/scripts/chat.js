@@ -108,7 +108,8 @@ function Chat (address, chatname, isglobal)
 		for(m of preConnectionMessageQueue) {
 			socket.send(m);
 		}
-
+		if(profilepacket)
+			socket.send(profilepacket);
 		delete preConnectionMessageQueue;
 	}
 
@@ -119,24 +120,42 @@ function Chat (address, chatname, isglobal)
 			NewChatMessage(data, chatType);
 		break;
 		case "userConnect":
-		if(self.isglobal)
-			PrintChatInfo(" " + data.name + " joined chat.", "Server");
-		else
-			PrintChatInfo(" " + data.name + " joined this room.", "Server");
+			if(self.isglobal)
+				PrintChatInfo(" " + data.name + " joined chat.", "Server");
+			else
+				PrintChatInfo(" " + data.name + " joined this room.", "Server");
 		break;
 		case "roomDisconnect":
-		if(self.isglobal)
-			PrintChatInfo(" " + data.name + " left.", "Server");
-		else
-			PrintChatInfo(" " + data.name + " left this room.", "Server");
+			if(self.isglobal)
+				PrintChatInfo(" " + data.name + " left.", "Server");
+			else
+				PrintChatInfo(" " + data.name + " left this room.", "Server");
 		break;
 		case "serverInfo":
 			PrintChatInfo(data.text, "Server")
+		break;
+		case "playersCount":
+		if(data.count > 1) {
+			if(self.isglobal)
+				PrintChatInfo(" " + data.count + " players online in total.", "Server");
+			else
+				PrintChatInfo(" " + data.count + " players in this room.", "Server");
+		}
 		break;
 		case "ping":
 			self.SendMessage("{ \"type\": \"pong\" }");
 		break;
 		}
+	}
+
+	socket.onclose = function() {
+		setTimeout( function() {
+		let s = new WebSocket(address);
+		s.onopen = socket.onopen;
+		s.onmessage = socket.onmessage;
+		s.onclose = socket.onclose;
+		socket = s;
+		}, 5000);
 	}
 
 	this.SendMessage = function(message) {

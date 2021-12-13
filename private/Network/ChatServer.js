@@ -12,6 +12,12 @@ function ChatServer (gameName) {
 
 			chatRooms[roomName].Connect(socket);
 			socket.chatRoomName = roomName;
+			socket.send(JSON.stringify(
+				{
+				type: "playersCount",
+				count: chatRooms[roomName].ClientsCount()
+				}
+			));
 		}
 	}
 
