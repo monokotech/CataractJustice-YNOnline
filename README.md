@@ -1,6 +1,6 @@
 # YNOnline
 
-Yume Nikki browser multiplayer
+Server for EasyRPG multiplayer
 
 # Game Server Setup
 ## Set your WebSocket port
@@ -12,6 +12,7 @@ open configuration.js
 edit 'port' field of global.config object
 
 set 'https' to 'true' if you want to use https
+
 set key and cert paths
 
 ## Start your game server
