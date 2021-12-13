@@ -26,7 +26,7 @@
 input {
 	color: var(--base-text-color);
 	background-color: var(--text-area-bg-color);
-	width: 100%;
+	width: calc(100% - 12px);
 	padding: 12px;
 	margin-top: 8px;
 	border: none;

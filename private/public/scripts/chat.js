@@ -215,9 +215,9 @@ window.onresize = function(event) {
 		document.getElementById("game_container").style.width = "100%";
 		document.getElementById("game_container").style.maxWidth = "100%";
 	} else {
-		document.getElementById("chatboxContainer").style.width = "calc(100% - 71%)";
+		document.getElementById("chatboxContainer").style.width = "calc(100% - 66%)";
 		document.getElementById("game_container").style.width = "100%";
-		document.getElementById("game_container").style.maxWidth = "70%";
+		document.getElementById("game_container").style.maxWidth = "65%";
 	}
 };
 
