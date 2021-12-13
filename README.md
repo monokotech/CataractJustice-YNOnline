@@ -1,6 +1,6 @@
 # YNOnline
 
-Server for EasyRPG multiplayer
+Server for EasyRPG multiplayer client [](https://github.com/CataractJustice/ynoclient/)
 
 # Game Server Setup
 ## Set your WebSocket port
