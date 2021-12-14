@@ -1,5 +1,6 @@
 const ClientsStorage = require('../ClientsStorage');
 const tripcode = require('tripcode');
+const Validators = require('../Validators/Validators');
 
 function ChatRoom(gameName) {
 	let clients = new Set();
@@ -149,7 +150,7 @@ function ChatRoom(gameName) {
 				}
 				else {
 
-					if(!Validators.ValidateName(nameData.name))
+					if(!Validators.ValidateName(msgjson.name))
 						return;
 
 					socket.name = msgjson.name;
