@@ -148,6 +148,10 @@ function ChatRoom(gameName) {
 					return;
 				}
 				else {
+
+					if(!Validators.ValidateName(nameData.name))
+						return;
+
 					socket.name = msgjson.name;
 					socket.trip = tripcode(msgjson.trip);
 					Broadcast(socket, JSON.stringify({type: "userConnect", name: socket.name, trip: socket.trip}));
