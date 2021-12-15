@@ -12,7 +12,10 @@ let PacketTypes =
 	name: 5,
 	movementAnimationSpeed: 6,
 	variable: 7,
-	switchsync: 8
+	switchsync: 8,
+	animtype: 9,
+	animframe: 10,
+	facing: 11
 }
 
 function Room (uid, gameServer) {
@@ -205,6 +208,41 @@ function Room (uid, gameServer) {
 					});
 				}
 			break;
+			case PacketTypes.animtype:
+
+			break;
+
+			case PacketTypes.animframe:
+				let animFramePacket = ParseAnimFramePacket(data);
+				if(animFramePacket) {
+					socket.syncObject.SetAnimFrame(animFramePacket);
+				} else {
+					YNOnline.Network.logWarning({
+						tags: ["invalid packets"],
+						text: "invalid animation frame packet",
+						extra: {
+							socket: socket,
+							data: data
+						}
+					});
+				}
+			break;
+			case PacketTypes.facing:
+				let facingPacket = ParseFacingPacket(data);
+
+				if(facingPacket) {
+					socket.syncObject.SetFacing(facingPacket);
+				} else {
+					YNOnline.Network.logWarning({
+						tags: ["invalid packets"],
+						text: "invalid facingpacket",
+						extra: {
+							socket: socket,
+							data: data
+						}
+					});
+				}
+			break;
 		}
 
 		self.SyncPlayerForAll(socket);
@@ -287,6 +325,27 @@ function Room (uid, gameServer) {
 		//uint16 packet type, uint32 switch id, int32 value
 		if(data.length == 10) {
 			return {id: data.readUInt32LE(2), value: data.readUInt32LE(6)};
+		}
+		return undefined;
+	}
+
+	function ParseAnimTypePacket(data) {
+		//uint16 packet type, uint16 type
+		//will implement later if needed
+		console.error("not implemented");
+	}
+
+	function ParseAnimFramePacket(data) {
+		//uint16 packet type, uint16 frame
+		if(data.length == 4) {
+			return {frame: data.readUInt16LE(2)};
+		}
+		return undefined;
+	}
+
+	function ParseFacingPacket(data) {
+		if(data.length == 4) {
+			return {facing: data.readUInt16LE(2)};
 		}
 		return undefined;
 	}

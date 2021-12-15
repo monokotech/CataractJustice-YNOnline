@@ -282,7 +282,7 @@ function SpriteSetCommand(args) {
 		if(!spriteList[gameName])
 			return;
 		let sprite = spriteList[gameName][args[1]];
-		if(args[1] == "default") {
+		if(args[1] == "default")
 			sprite = {sheet: "", id: 0};
 		if(sprite) {
 			sheet = Module.allocate(Module.intArrayFromString(sprite.sheet), Module.ALLOC_NORMAL);

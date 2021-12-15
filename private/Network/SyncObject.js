@@ -7,6 +7,7 @@ function SyncObject() {
 	this.sound = {};
 	this.name = config.defaultName;
 	this.movementAnimationSpeed = 2;
+	this.facing = 0;
 
 	let self = this;
 
@@ -60,9 +61,19 @@ function SyncObject() {
 		self.switchsync = args;
 		self.syncData.switchsync = args;
 	}
+
+	this.SetAnimFrame = function(args) {
+		self.animframe = args.frame;
+		self.syncData.animframe = args.frame;
+	}
+
+	this.SetFacing = function(args) {
+		self.facing = args.facing;
+		self.syncData.facing = args.facing;
+	}
 	//returns everything you need to sync player on room entering
 	this.GetFullSyncData = function() {
-		return { type: "objectSync", uid: self.uid, pos: self.pos, sprite: self.sprite, name: self.name, movementAnimationSpeed: self.movementAnimationSpeed};
+		return { type: "objectSync", uid: self.uid, pos: self.pos, sprite: self.sprite, name: self.name, movementAnimationSpeed: self.movementAnimationSpeed, facing: self.facing};
 	}
 }
 

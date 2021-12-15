@@ -97,6 +97,7 @@ function Chat (address, chatname, isglobal)
 	let chatType = "L";
 	this.isglobal = isglobal;
 	let self = this;
+	let shouldBeClosed = false;
 
 	if(isglobal)
 		chatType = "G";
@@ -149,13 +150,15 @@ function Chat (address, chatname, isglobal)
 	}
 
 	socket.onclose = function() {
-		setTimeout( function() {
-		let s = new WebSocket(address);
-		s.onopen = socket.onopen;
-		s.onmessage = socket.onmessage;
-		s.onclose = socket.onclose;
-		socket = s;
-		}, 5000);
+		if(!shouldBeClosed) {
+			setTimeout( function() {
+			let s = new WebSocket(address);
+			s.onopen = socket.onopen;
+			s.onmessage = socket.onmessage;
+			s.onclose = socket.onclose;
+			socket = s;
+			}, 5000);
+		}
 	}
 
 	this.SendMessage = function(message) {
@@ -167,6 +170,7 @@ function Chat (address, chatname, isglobal)
 	}
 
 	this.Close = function() {
+		shouldBeClosed = true;
 		socket.close();
 	}
 }
