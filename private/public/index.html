@@ -82,17 +82,23 @@
 			  <input id="chatEnterSubmit" type="submit" style="display:none"></input>
             </form>
           </div>
-		  <div class = "ChatSettingsContiner">
+		  <div class = "ChatSettingsContainer">
 			<button id = "globalMessagesToggle">Hide/Show global chat</button>
-			
-			<button id = "wantUploadSaveButton">Upload save file</button>
+			<div id = "saveOptions">
+				<button id = "wantUploadSaveButton" style = "margin: 0; width: 49.5%; display: inline-block;">Upload save</button>
+				<button id = "wantDownloadSaveButton" style = "margin: 0; width: 49.5%; display: inline-block;">Download save</button>
+			</div>
 			<div id = "uploadSaveContainer", style = "display: none">
 				<div style="display: inline-block;">Upload save</div>
 				<input type = "file" id = "uploadSaveFileInput"> </input>
 				<div style="display: inline-block;">save slot</div>
 				<input  id = "uploadSaveSlotInput" type="number" max="15" min="1" value="1"></input>
 				<button id = "uploadSaveButton">Upload</button>
-			
+			</div>
+			<div id = "downloadSaveContainer", style = "display: none">
+				<div style="display: inline-block;">Choose slot to download</div>
+				<input  id = "downloadSaveSlotInput" type="number" max="15" min="1" value="1"></input>
+				<button id = "downloadSaveButton">Download</button>
 			</div>
 		  </div>
         </div>
@@ -120,6 +126,7 @@
 <script type="text/javascript" src="scripts/commands/pardon.js"></script>
 <script type="text/javascript" src="scripts/commands/commands.js"></script>
 <script type="text/javascript" src="scripts/saveupload.js"></script>
+<script type="text/javascript" src="scripts/savedownload.js"></script>
 
 
 
