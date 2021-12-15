@@ -18,26 +18,31 @@ globalMessagesToggle.onclick = function(){
 	document.querySelector(':root').style.setProperty('--global-chat-display', globalChatDisplayed ? 'block' : 'none');
 }
 
-function SendMessage() {
-  if (chatInput.value === "") {
+// split into two functions since game client can now call this
+function SendMessageString(textStr) {
+  if (textStr === "") {
     return;
   }
 
-  if(chatInput.value[0] == '/') {
-	  ExecuteCommand(chatInput.value);
-	  chatInput.value = "";
+  if(textStr[0] == '/') {
+	  ExecuteCommand(textStr);
 	  return;
   }
 
-  if(chatInput.value[0] == '!') {
-  	chatInput.value = chatInput.value.substr(1);
-	YNOnline.Network.globalChat.SendMessage(JSON.stringify({text: chatInput.value}));
+  if(textStr[0] == '!') {
+  	textStr = textStr.substr(1);
+	YNOnline.Network.globalChat.SendMessage(JSON.stringify({text: textStr}));
   } else if(YNOnline.Network.localChat){
-	YNOnline.Network.localChat.SendMessage(JSON.stringify({text: chatInput.value}));
+	YNOnline.Network.localChat.SendMessage(JSON.stringify({text: textStr}));
   } else {
 	  PrintChatInfo("You're not connected to any room\nYou can use global chat with '!' at the begining of a message", "Client");
   }
-  chatInput.value = "";
+}
+
+// called by HTML typebox
+function SendMessage() {
+	SendMessageString(chatInput.value);
+	chatInput.value = "";
 }
 
 function NewChatMessage(message, source) {
@@ -66,6 +71,17 @@ function NewChatMessage(message, source) {
 	messageContainer.appendChild(messageTextContainer);
 	chatMessagesContainer.appendChild(messageContainer);
 	onNewChatEntry();
+
+	// let game know about incoming messages
+	let inMsgName = Module.allocate(Module.intArrayFromString(message.name), Module.ALLOC_NORMAL);
+	let inMsgTrip = Module.allocate(Module.intArrayFromString(message.trip), Module.ALLOC_NORMAL);
+	let inMsgText = Module.allocate(Module.intArrayFromString(message.text), Module.ALLOC_NORMAL);
+	let inMsgSrc = Module.allocate(Module.intArrayFromString(source), Module.ALLOC_NORMAL);
+  Module._gotMessage(inMsgName, inMsgTrip, inMsgText, inMsgSrc);
+	Module._free(inMsgName);
+	Module._free(inMsgTrip);
+	Module._free(inMsgText);
+	Module._free(inMsgSrc);
 }
 
 function PrintChatInfo(text, source) {
@@ -81,6 +97,13 @@ function PrintChatInfo(text, source) {
 	infoContainer.appendChild(infoTextContainer);
 	chatMessagesContainer.appendChild(infoContainer);
 	onNewChatEntry();
+
+	// let game know about incoming info
+	let inMsgSource = Module.allocate(Module.intArrayFromString(source), Module.ALLOC_NORMAL);
+	let inMsgText = Module.allocate(Module.intArrayFromString(text), Module.ALLOC_NORMAL);
+  Module._gotChatInfo(inMsgSource, inMsgText);
+	Module._free(inMsgSource);
+	Module._free(inMsgText);
 }
 
 function onNewChatEntry() {
@@ -179,34 +202,45 @@ function randomTripcode(len) {
 	return t;
 }
 
-//TO-DO: rename to something more neutral (SendProfileInfo() or smth) just in case anything is going to change
-function SendNameAndTripcode() {
-	
-	if(nameInput.value === "")
-		return;
+// called by both HTML chat and in-game chat. Each one has its own validation process before calling this.
+function SendProfileInfo(iName, iTrip) {
+	// no trip specified, generate random.
+	if(iTrip === "") iTrip = randomTripcode(16);
 
-	if(tripInput.value === "") {
-		tripInput.value = randomTripcode(16);
-	}
+	// send to server
+	let data = {name: iName, trip: iTrip}
+	profilepacket = JSON.stringify(data);
+	YNOnline.Network.globalChat.SendMessage(profilepacket);
+	// update info in-game
+	let name = Module.allocate(Module.intArrayFromString(iName), Module.ALLOC_NORMAL);
+  Module._ChangeName(name);
+	Module._free(name);
+	// connect
+	ConnectToLocalChat(GetRoomID());
 
+	// Change chat interface to allow for message input. Necessary whether profile info was sent from HTML or in-game chat.
+	// TO-DO: sending profile info from HTML chat instead does not update name input interface in-game.
+	// Shouldn't be a problem if HTML chat will be completely replaced by in-game one.
 	document.getElementById("enterChatContainer").style.display = "none";
 	chatInputContainer.style.display = "block";
 	chatInput.disabled = false;
 
-	let data = {name: nameInput.value, trip: tripInput.value}
-	profilepacket = JSON.stringify(data);
-	YNOnline.Network.globalChat.SendMessage(profilepacket);
-
-	saveChatConfig();
-
-	let name = Module.allocate(Module.intArrayFromString(nameInput.value), Module.ALLOC_NORMAL);
-  	Module._ChangeName(name);
-	Module._free(name);
-
+	// TO-DO: chat preferences only load in HTML profile input. Not in-game.
+	nameInput.value = iName; // Sets values of input fields because saveChatConfig() reads from them.
+	tripInput.value = iTrip; // This is done so it can save preferences even if profile info is sent from in-game.
+	saveChatConfig(); // <-- reads from HTML fields.
 	nameInput.value = "";
 	tripInput.value = "";
+}
 
-	ConnectToLocalChat(GetRoomID());
+function TrySendProfileInfo() {
+	// Separate validation (for HTML chat) from actual sending done in SendProfileInfo().
+	// We don't want validation to fail here on the JS side after game client (in-game chat) has already sent and hidden its name input box,
+	// 		so game client will do validation of its own before calling SendProfileInfo().
+
+	if(nameInput.value === "") return; // additional restrictions enforced by HTML (max length and latin alphanumeric characters)
+	// valid, send.
+	SendProfileInfo(nameInput.value, tripInput.value);
 }
 
 function ConnectToLocalChat(room) {
@@ -231,12 +265,8 @@ function initChat() {
 window.onresize = function(event) {
     if(document.documentElement.clientWidth < 1190) {
 		document.getElementById("chatboxContainer").style.width = "100%";
-		document.getElementById("game_container").style.width = "100%";
-		document.getElementById("game_container").style.maxWidth = "100%";
 	} else {
 		document.getElementById("chatboxContainer").style.width = "calc(100% - 66%)";
-		document.getElementById("game_container").style.width = "100%";
-		document.getElementById("game_container").style.maxWidth = "65%";
 	}
 };
 
