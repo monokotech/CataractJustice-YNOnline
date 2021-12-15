@@ -1,5 +1,6 @@
 const ClientsStorage = require('../ClientsStorage');
 const tripcode = require('tripcode');
+const Validators = require('../Validators/Validators');
 
 function ChatRoom(gameName) {
 	let clients = new Set();
@@ -148,6 +149,10 @@ function ChatRoom(gameName) {
 					return;
 				}
 				else {
+
+					if(!Validators.ValidateName(msgjson.name))
+						return;
+
 					socket.name = msgjson.name;
 					socket.trip = tripcode(msgjson.trip);
 					Broadcast(socket, JSON.stringify({type: "userConnect", name: socket.name, trip: socket.trip}));
