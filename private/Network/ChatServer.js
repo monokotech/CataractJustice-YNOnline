@@ -22,10 +22,12 @@ function ChatServer (gameName) {
 	}
 
 	this.Disconnect = function(socket) {
-		chatRooms[socket.chatRoomName].Disconnect(socket);
+		if(socket.chatRoomName) {	
+			chatRooms[socket.chatRoomName].Disconnect(socket);
 
-		if(chatRooms[socket.chatRoomName].ClientsCount() <= 0) {
-			delete chatRooms[socket.chatRoomName];
+			if(chatRooms[socket.chatRoomName].ClientsCount() <= 0) {
+				delete chatRooms[socket.chatRoomName];
+			}
 		}
 	}
 }
