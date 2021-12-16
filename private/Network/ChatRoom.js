@@ -10,9 +10,9 @@ function ChatRoom(gameName) {
 		return clients.size;
 	}
 
-	function Broadcast(broadsocket, message) {
+	function Broadcast(broadsocket, message, otherSocketsOnly) {
 		for(let socket of clients) {
-			if(!ClientsStorage.IsClientIgnoredByClientInChat(broadsocket, socket))
+			if(!ClientsStorage.IsClientIgnoredByClientInChat(broadsocket, socket) && !(otherSocketsOnly && socket.uuid == broadsocket.uuid))
 				if(typeof message == 'object')
 					socket.send(JSON.stringify(message));
 				else
@@ -155,7 +155,7 @@ function ChatRoom(gameName) {
 
 					socket.name = msgjson.name;
 					socket.trip = tripcode(msgjson.trip);
-					Broadcast(socket, JSON.stringify({type: "userConnect", name: socket.name, trip: socket.trip}));
+					Broadcast(socket, JSON.stringify({type: "userConnect", name: socket.name, trip: socket.trip}), true);
 
 					//here im setting tripcode of every connection that has same IP to new received tripcode, which is stupid but i will not fix that until somebody will notice that
 					//im doing that so room code will get acces to tripcode of a user since tripcode needed to see if any user is ignored by this user

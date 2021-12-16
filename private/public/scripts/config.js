@@ -37,7 +37,6 @@ let config = {
 		console.log("Something went wrong when loading your saved configurations. Your configs will be overwritten.");
 		console.log("Your old configs: " + window.localStorage.getItem('config'));
     	window.localStorage.setItem('config', configjson);
-		console.log(e);
 	}
 	
 	config = savedConfig;
