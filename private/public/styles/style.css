@@ -49,7 +49,7 @@ a {
 }
 
 #game_container {
-	width: 79%;
+	flex-grow: 1;
 	height: 480x;
 	display: block;
 }

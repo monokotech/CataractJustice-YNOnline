@@ -141,7 +141,8 @@
     @media (hover: hover) and (pointer: fine) {
       #apad,
       #dpad,
-	  #npad {
+	  #npad,
+    #chatboxContainer {
         display: none;
       }
     }
