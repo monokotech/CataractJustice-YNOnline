@@ -21,7 +21,7 @@
             <div id="status"></div>
 			
             <canvas id="canvas" tabindex="-1"></canvas>
-
+			
 			<div id="npad", class="unselectable"> 
               <div id="npad-num1" data-key="Num1" data-key-code="49">1</div>
               <div id="npad-num3" data-key="Num3" data-key-code="51">3</div>
@@ -84,10 +84,26 @@
           </div>
 		  <div class = "ChatSettingsContainer">
 			<button id = "globalMessagesToggle">Hide/Show global chat</button>
-			<div id = "saveOptions">
-				<button id = "wantUploadSaveButton" style = "margin: 0; width: 49.5%; display: inline-block;">Upload save</button>
-				<button id = "wantDownloadSaveButton" style = "margin: 0; width: 49.5%; display: inline-block;">Download save</button>
-			</div>
+		  </div>
+        </div>
+		</div>
+    </div>
+  </div>
+<br>
+<div class="instruction">Press 3 to hide/show the connection status window</div>
+<br>
+
+<div id = "saveControllsContainer" style = "width: 50%;">
+<table id = "saveOptions" >
+				<tr>
+				<td>
+				<button id = "wantUploadSaveButton" style = "margin: 0; width: 100%; display: inline-block;">Upload save</button>
+				</td>
+				<td>
+				<button id = "wantDownloadSaveButton" style = "margin: 0; width: 100%; display: inline-block;">Download save</button>
+				</td>
+				</tr>
+			</table>
 			<div id = "uploadSaveContainer", style = "display: none">
 				<div style="display: inline-block;">Upload save</div>
 				<input type = "file" id = "uploadSaveFileInput"> </input>
@@ -100,14 +116,8 @@
 				<input  id = "downloadSaveSlotInput" type="number" max="15" min="1" value="1"></input>
 				<button id = "downloadSaveButton">Download</button>
 			</div>
-		  </div>
-        </div>
-		</div>
-    </div>
-  </div>
-<br>
-<div class="instruction">Press 3 to hide/show the connection status window</div>
-<br>
+</div>
+
 <a href="https://gitlab.com/CataractJustice/YNOnline/">Server source code</a><br>
 <a href="https://github.com/CataractJustice/ynoclient">Client source code</a><br>
 <br>

@@ -7,7 +7,7 @@
 	border-width: 2px;
 }
 
-#chatboxContainer button {
+button {
 	background-color: var(--element-bg-color);
 	width: 100%;
 	border: 0px solid;

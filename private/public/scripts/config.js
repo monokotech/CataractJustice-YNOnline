@@ -33,8 +33,8 @@ let config = {
 				Module._free(inCfgTrip);
     	}
 	} catch(e) {
-		PrintChatInfo("Something went wrong when loading your saved configurations. Your configs will be overwritten.");
-		PrintChatInfo("Your old configs: " + window.localStorage.getItem('config'));
+		console.log("Something went wrong when loading your saved configurations. Your configs will be overwritten.");
+		console.log("Your old configs: " + window.localStorage.getItem('config'));
     	window.localStorage.setItem('config', configjson);
 		console.log(e);
 	}
