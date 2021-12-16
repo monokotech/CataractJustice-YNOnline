@@ -1,6 +1,7 @@
 # YNOnline
 
 Server for EasyRPG online client 
+
 Client source code: https://github.com/CataractJustice/ynoclient/
 
 ## Features
