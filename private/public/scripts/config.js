@@ -23,8 +23,14 @@ let config = {
 		}
     	else {
     		savedConfig = JSON.parse(window.localStorage.getItem('config'));
-			nameInput.value = savedConfig.chat.name;
-			tripInput.value = savedConfig.chat.trip;
+				nameInput.value = savedConfig.chat.name;
+				tripInput.value = savedConfig.chat.trip;
+				// let game know about saved config
+				let inCfgName = Module.allocate(Module.intArrayFromString(savedConfig.chat.name), Module.ALLOC_NORMAL);
+				let inCfgTrip = Module.allocate(Module.intArrayFromString(savedConfig.chat.trip), Module.ALLOC_NORMAL);
+			  Module._loadProfileSavedPreferences(inCfgName, inCfgTrip);
+				Module._free(inCfgName);
+				Module._free(inCfgTrip);
     	}
 	} catch(e) {
 		PrintChatInfo("Something went wrong when loading your saved configurations. Your configs will be overwritten.");
@@ -43,5 +49,3 @@ let config = {
 		PrintChatInfo("Something went wrong when saving your configurations.")
     }
   }
-  
-  loadOrInitConfig();

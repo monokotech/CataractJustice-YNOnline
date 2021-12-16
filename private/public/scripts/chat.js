@@ -255,13 +255,21 @@ function ConnectToLocalChat(room) {
 		YNOnline.Network.localChat.SendMessage(profilepacket);
 }
 
-YNOnline.Network.globalChat = new Chat(WSAddress, "gchat", true);
+YNOnline.Network.globalChat = null;
 YNOnline.Network.localChat = null;
 
 function initChat() {
   let host = Module.allocate(Module.intArrayFromString(WSAddress), Module.ALLOC_NORMAL);
 	Module._SetWSHost(host);
 	Module._free(host);
+
+	// loads user config only after module has been initialized,
+	// so we can communicate with game (to send user preferences)
+	loadOrInitConfig();
+
+	// open global chat only after module has been initialized,
+	// so it can send info messages to the in-game chat
+	YNOnline.Network.globalChat = new Chat(WSAddress, "gchat", true);
 
 	PrintChatInfo("Type /help to see list of slash commands.\nUse '!' at the bebining of a message to send it to global chat.", "Info");
 }
