@@ -7,9 +7,6 @@ if(urlParams.get("game"))
 	gameName = urlParams.get("game");
 else {
 	gameName = window.location.pathname.replaceAll('/', '');
-	Module.arguments.push("--game");
-	Module.arguments.push(gameName);
-	Module.EASYRPG_GAME = gameName;
 }
 //comment this to stop pings
 ////////
