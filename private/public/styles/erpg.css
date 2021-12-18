@@ -40,8 +40,8 @@
     }
 
     #game_container {
-      width: 640px;
-      height: 480px;
+      width: 960px;
+	  height: 480px;
 	  background-color: white;
     }
 
@@ -50,6 +50,7 @@
       text-align: right;
       z-index: 10;
       height: 0px;
+	  float: right;
     }
 
     #controls button {
