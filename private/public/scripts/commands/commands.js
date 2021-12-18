@@ -9,7 +9,9 @@ let commands = {
 	getuuid: GetUUIDCommand,
 	pvol: SetPlayersVolumeCommand,
 	pardonchat: PardonChatCommand,
-	pardongame: PardonGameCommand
+	pardongame: PardonGameCommand,
+	rcm: RoomConnectionMessagesSwitchCommand,
+	pcm: PlayerRoomConnectionMessagesSwitchCommand
 }
 
 

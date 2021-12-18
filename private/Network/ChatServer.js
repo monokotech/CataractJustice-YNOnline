@@ -6,6 +6,10 @@ function ChatServer (gameName) {
 
 		socket.onmessage = function(e) {
 			let roomName = e.data.toString();
+			if(roomName.length > 16) {
+				socket.close();
+				return;
+			}
 			
 			if(!chatRooms[roomName])
 				chatRooms[roomName] = new ChatRoom(gameName);

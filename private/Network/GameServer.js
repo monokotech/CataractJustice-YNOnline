@@ -16,10 +16,6 @@ function GameServer(gameName) {
 	this.Connect = function(socket) 
 	{	
 		playerCount++;
-		socket.send(JSON.stringify({
-			type: "connection",
-			uuid: socket.uuid
-		}));
 
 		self.clients[socket.uuid] = socket;
 

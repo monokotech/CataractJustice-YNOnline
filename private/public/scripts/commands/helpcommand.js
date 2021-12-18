@@ -50,6 +50,16 @@ let helpData = {
 	pardongame: {
 		tip: "Lets you unignore players in game",
 		help: "/pardongame <uuid>"
+	},
+
+	rcm: {
+		tip: "Switch room connection messages on/off",
+		help: "/rcm"
+	},
+
+	pcm: {
+		tip: "Switch messages about players connecting/disconnecting to current room on/off",
+		help: "/pcm"
 	}
 }
 

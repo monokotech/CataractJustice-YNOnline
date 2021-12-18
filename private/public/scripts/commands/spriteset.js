@@ -288,8 +288,6 @@ function SpriteSetCommand(args) {
 			sheet = Module.allocate(Module.intArrayFromString(sprite.sheet), Module.ALLOC_NORMAL);
   			Module._SlashCommandSetSprite(sheet, sprite.id);
   			Module._free(sheet);
-
-			
 		} else {
 			PrintChatInfo("Unknown sprite name, see /spritelist", "SpriteSet");
 		}

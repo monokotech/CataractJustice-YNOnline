@@ -146,14 +146,14 @@ function Chat (address, chatname, isglobal)
 		case "userConnect":
 			if(self.isglobal)
 				PrintChatInfo(" " + data.name + " joined chat.", "Server");
-			/*else
-				PrintChatInfo(" " + data.name + " joined this room.", "Server");*/
+			else if(shouldPrintPlayerRoomConnections)
+				PrintChatInfo(" " + data.name + " joined this room.", "Server");
 		break;
 		case "roomDisconnect":
 			if(self.isglobal)
 				PrintChatInfo(" " + data.name + " left.", "Server");
-			/*else
-				PrintChatInfo(" " + data.name + " left this room.", "Server");*/
+			else if(shouldPrintPlayerRoomConnections)
+ 				PrintChatInfo(" " + data.name + " left this room.", "Server");
 		break;
 		case "serverInfo":
 			PrintChatInfo(data.text, "Server")
