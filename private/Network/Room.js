@@ -30,7 +30,8 @@ function Room (uid, gameServer) {
 
 	this.Connect = function(socket) {
 		clients.add(socket);
-		socket.syncObject = new SyncObject();
+		if(!socket.syncObject)
+			socket.syncObject = new SyncObject();
 		syncObjects.add(socket.syncObject);
 		if(socket.name) {
 			socket.syncObject.SetName({name: socket.name});
@@ -80,34 +81,15 @@ function Room (uid, gameServer) {
 		switch(data.readUInt16LE(0)) {
 			case PacketTypes.movement:
 				let movementData = ParseMovementPacket(data);
-				if(movementData)
+				if(movementData) {
 					socket.syncObject.SetPosition(movementData);
-				else {
-					YNOnline.Network.logWarning({
-						tags: ["invalid packets"],
-						text: "invalid movement packet",
-						extra: {
-							socket: socket,
-							data: data
-						}
-					});
 				}
 			break;
 			
 			case PacketTypes.sprite:
 				let spriteData = ParseSpritePacket(data);
-
-				if(spriteData)
+				if(spriteData) {
 					socket.syncObject.SetSprite(spriteData);
-				else {
-					YNOnline.Network.logWarning({
-						tags: ["invalid packets"],
-						text: "invalid sprite packet",
-						extra: {
-							socket: socket,
-							data: data
-						}
-					});
 				}
 			break;
 
@@ -116,16 +98,6 @@ function Room (uid, gameServer) {
 				if(soundData) {
 					socket.syncObject.PlaySound(soundData);
 				}
-				else {
-					YNOnline.Network.logWarning({
-						tags: ["invalid packets"],
-						text: "invalid sound packet",
-						extra: {
-							socket: socket,
-							data: data
-						}
-					});
-				}
 			break;	
 
 			case PacketTypes.weather:
@@ -133,15 +105,6 @@ function Room (uid, gameServer) {
 
 				if(weatherData) {
 					socket.syncObject.SetWeather(weatherData);
-				} else {
-					YNOnline.Network.logWarning({
-						tags: ["invalid packets"],
-						text: "invalid weather packet",
-						extra: {
-							socket: socket,
-							data: data
-						}
-					});
 				}
 			break;
 
@@ -150,30 +113,12 @@ function Room (uid, gameServer) {
 				if(nameData && Validators.ValidateName(nameData.name)) {
 					socket.syncObject.SetName(nameData);
 					socket.name = nameData.name;
-				} else {
-					YNOnline.Network.logWarning({
-						tags: ["invalid packets"],
-						text: "invalid name packet",
-						extra: {
-							socket: socket,
-							data: data
-						}
-					});
 				}
 			break;
 			case PacketTypes.movementAnimationSpeed:
 				let movementSpeedData = ParseMovementSpeedPacket(data);
 				if(movementSpeedData) {
 					socket.syncObject.SetMovementSpeed(movementSpeedData);
-				} else {
-					YNOnline.Network.logWarning({
-						tags: ["invalid packets"],
-						text: "invalid movement speed packet",
-						extra: {
-							socket: socket,
-							data: data
-						}
-					});
 				}
 			break;
 			//there was a problem with 2kki when it would set some variable every frame
@@ -182,65 +127,30 @@ function Room (uid, gameServer) {
 				let variableData = ParseVariableSetPacket(data);
 				if(variableData) {
 					socket.syncObject.SetVariable(variableData);
-				} else {
-					YNOnline.Network.logWarning({
-						tags: ["invalid packets"],
-						text: "invalid variable packet",
-						extra: {
-							socket: socket,
-							data: data
-						}
-					});
 				}
 			break;
 			case PacketTypes.switchsync:
-				let switchsyncData = ParseSwitchSetPacket(data);
-				if(switchsyncData) {
-					socket.syncObject.SetSwitch(switchsyncData);
-				} else {
-					YNOnline.Network.logWarning({
-						tags: ["invalid packets"],
-						text: "invalid switch packet",
-						extra: {
-							socket: socket,
-							data: data
-						}
-					});
+				if(config.switchsync) {
+					let switchsyncData = ParseSwitchSetPacket(data);
+					if(switchsyncData) {
+						socket.syncObject.SetSwitch(switchsyncData);
+					}
 				}
 			break;
 			case PacketTypes.animtype:
-
+				return;
 			break;
 
 			case PacketTypes.animframe:
 				let animFramePacket = ParseAnimFramePacket(data);
 				if(animFramePacket) {
 					socket.syncObject.SetAnimFrame(animFramePacket);
-				} else {
-					YNOnline.Network.logWarning({
-						tags: ["invalid packets"],
-						text: "invalid animation frame packet",
-						extra: {
-							socket: socket,
-							data: data
-						}
-					});
 				}
 			break;
 			case PacketTypes.facing:
 				let facingPacket = ParseFacingPacket(data);
-
 				if(facingPacket) {
 					socket.syncObject.SetFacing(facingPacket);
-				} else {
-					YNOnline.Network.logWarning({
-						tags: ["invalid packets"],
-						text: "invalid facingpacket",
-						extra: {
-							socket: socket,
-							data: data
-						}
-					});
 				}
 			break;
 		}

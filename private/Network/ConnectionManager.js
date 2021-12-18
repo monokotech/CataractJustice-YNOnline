@@ -19,8 +19,6 @@ function ConnectionManager() {
 			socket.close();
 			return;
 		}
-
-		socket.uuid = crypto.randomUUID();
 		socket.name = config.defaultName;
 
 		//if socket doesn't send service name after 3 second, disconnect it

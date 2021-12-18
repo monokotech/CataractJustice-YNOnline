@@ -21,7 +21,9 @@ global.config =
 	gamesPath: "./public/play/games/",
 	
 	shouldSendPings: true,
-	pingInterval_ms: 15000
+	pingInterval_ms: 15000,
+
+	switchsync: false
 }
 
 if(global.config.https) {

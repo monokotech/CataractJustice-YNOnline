@@ -1,4 +1,4 @@
-
+const crypto = require('crypto');
 const WebSocket = require('ws');
 
 let SessionClients = {
@@ -8,13 +8,15 @@ let SessionClients = {
 function RegisterConnection(socket) {
 	if(!SessionClients[socket.address]) {
 		SessionClients[socket.address] = {};
-		SessionClients[socket.address].uuids = [];
+		SessionClients[socket.address].uuids = [crypto.randomUUID()];
 		SessionClients[socket.address].chatignores = [];
 		SessionClients[socket.address].gameignores = [];
 		SessionClients[socket.address].sockets = {};
 	}
 
-	SessionClients[socket.address].uuids.push(socket.uuid);
+	SessionClients[socket.address].uuidsc = 0;
+
+	socket.uuid = SessionClients[socket.address].uuids[0];
 
 	SessionClients[socket.address].sockets[socket.uuid] = socket;
 	SessionClients.sockets[socket.uuid] = socket;
@@ -38,7 +40,10 @@ function ActiveConnectionsCountOfAddress(address) {
 
 	for(let k of kl) {
 		let state = SessionClients[address].sockets[k].readyState;
-		connectionsCount += (state === WebSocket.CONNECTING || state === WebSocket.OPEN) ? 1 : 0;
+		if((state === WebSocket.CONNECTING || state === WebSocket.OPEN))
+			connectionsCount++;
+		else
+			delete SessionClients[address].sockets[k];
 	}
 
 	return connectionsCount;
