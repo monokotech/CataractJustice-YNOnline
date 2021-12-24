@@ -15,7 +15,9 @@ let PacketTypes =
 	switchsync: 8,
 	animtype: 9,
 	animframe: 10,
-	facing: 11
+	facing: 11,
+	typingstatus: 12,
+	syncme: 13
 }
 
 function Room (uid, gameServer) {
@@ -76,7 +78,7 @@ function Room (uid, gameServer) {
 	}
 
 	this.ProcessPacket = function(socket, data) {
-		let packet;
+
 		if(data.readUInt16LE) {
 		switch(data.readUInt16LE(0)) {
 			case PacketTypes.movement:
@@ -153,9 +155,17 @@ function Room (uid, gameServer) {
 					socket.syncObject.SetFacing(facingPacket);
 				}
 			break;
+			case PacketTypes.typingstatus:
+				let typingstatusPacket = ParseTypingstatusPacket(data);
+				if(typingstatusPacket) {
+					socket.syncObject.SetTypingStatus(typingstatusPacket);
+				} 
+			break;
+			case PacketTypes.syncme:
+				if(Object.keys(socket.syncObject.syncData).length > 2)
+					self.SyncPlayerForAll(socket);
+			break;
 		}
-
-		self.SyncPlayerForAll(socket);
 		}
 	}
 
@@ -256,6 +266,13 @@ function Room (uid, gameServer) {
 	function ParseFacingPacket(data) {
 		if(data.length == 4) {
 			return {facing: data.readUInt16LE(2)};
+		}
+		return undefined;
+	}
+
+	function ParseTypingstatusPacket(data) {
+		if(data.length == 4) {
+			return {typingstatus: data.readUInt16LE(2)};
 		}
 		return undefined;
 	}

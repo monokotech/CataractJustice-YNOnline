@@ -1,13 +1,16 @@
 const crypto = require('crypto');
 
+let lastid = 0;
+
 function SyncObject() {
-	this.uid = crypto.randomUUID();
+	this.uid = (lastid++).toString();
 	this.pos = {x: 0, y: 0};
 	this.sprite = config.defauldSprite;
 	this.sound = {};
 	this.name = config.defaultName;
 	this.movementAnimationSpeed = 2;
 	this.facing = 0;
+	this.typingstatus = 0;
 
 	let self = this;
 
@@ -71,6 +74,12 @@ function SyncObject() {
 		self.facing = args.facing;
 		self.syncData.facing = args.facing;
 	}
+
+	this.SetTypingStatus = function(args) {
+		self.typingstatus = args.typingstatus;
+		self.syncData.typingstatus = args.typingstatus;
+	}
+
 	//returns everything you need to sync player on room entering
 	this.GetFullSyncData = function() {
 		return { type: "objectSync", uid: self.uid, pos: self.pos, sprite: self.sprite, name: self.name, movementAnimationSpeed: self.movementAnimationSpeed, facing: self.facing};
