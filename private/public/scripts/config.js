@@ -14,7 +14,7 @@ let config = {
   };
   
   function loadOrInitConfig() {
-	let savedConfig;
+	let savedConfig = config;
 	let configjson;
 	try {
 		configjson = JSON.stringify(config);
@@ -25,12 +25,6 @@ let config = {
     		savedConfig = JSON.parse(window.localStorage.getItem('config'));
 				nameInput.value = savedConfig.chat.name;
 				tripInput.value = savedConfig.chat.trip;
-				// let game know about saved config
-				let inCfgName = Module.allocate(Module.intArrayFromString(savedConfig.chat.name), Module.ALLOC_NORMAL);
-				let inCfgTrip = Module.allocate(Module.intArrayFromString(savedConfig.chat.trip), Module.ALLOC_NORMAL);
-			  Module._loadProfileSavedPreferences(inCfgName, inCfgTrip);
-				Module._free(inCfgName);
-				Module._free(inCfgTrip);
     	}
 	} catch(e) {
 		console.error(e);
@@ -49,3 +43,22 @@ let config = {
 		PrintChatInfo("Something went wrong when saving your configurations.")
     }
   }
+
+
+function getProfileConfigName() {
+	if(window.localStorage.hasOwnProperty('config')) {
+		var savedConfig = JSON.parse(window.localStorage.getItem('config'));
+		return savedConfig.chat.name;
+	} else {
+		return "";
+	}
+}
+
+function getProfileConfigTrip() {
+	if(window.localStorage.hasOwnProperty('config')) {
+		var savedConfig = JSON.parse(window.localStorage.getItem('config'));
+		return savedConfig.chat.trip;
+	} else {
+		return "";
+	}
+}
