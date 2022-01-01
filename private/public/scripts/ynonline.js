@@ -8,6 +8,7 @@ if(urlParams.get("game"))
 else {
 	gameName = window.location.pathname.replaceAll('/', '');
 }
+Module = { EASYRPG_GAME: gameName }
 //comment this to stop pings
 ////////
 setInterval(
