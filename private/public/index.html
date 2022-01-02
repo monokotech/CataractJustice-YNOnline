@@ -19,7 +19,12 @@
 
             <div id="status"></div>
 			
-            <canvas id="canvas" tabindex="-1"></canvas>
+						<div style="position: relative; left: 0px; top: 0px; width: 100%; height: 100%;">
+							<div style="position: absolute; width: 100%; padding-top: 25%; padding-bottom: 25%; left: 0px; top: 50%; transform: translateY(-50%);">
+								<input id="chat_input_helper" style="z-index: -1; pointer-events: none; opacity: 0; width: 1px; height: 10%; padding: 0px; margin: 0px; position: absolute; right: 0px; bottom: 0px; font-size: 999999px;" spellcheck="false">
+							</div>
+            	<canvas id="canvas" tabindex="-1"></canvas>
+						</div>
 			
 			<div id="npad", class="unselectable"> 
               <div id="npad-num1" data-key="Num1" data-key-code="49">1</div>
