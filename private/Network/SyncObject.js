@@ -8,7 +8,7 @@ function SyncObject() {
 	this.sprite = config.defauldSprite;
 	this.sound = {};
 	this.name = config.defaultName;
-	this.movementAnimationSpeed = 2;
+	this.movementAnimationSpeed = 4;
 	this.facing = 0;
 	this.typingstatus = 0;
 

@@ -38,7 +38,7 @@ function ConnectionManager() {
 				socket.storageInstance = ClientsStorage.RegisterConnection(socket);
 				services[serviceName].Connect(socket);
 
-				connections[socket.uuid] = socket;
+				connections[crypto.randomUUID()] = socket;
 			}
 			else {
 				socket.close();

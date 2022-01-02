@@ -47,7 +47,7 @@ function Room (uid, gameServer) {
 
 	this.Disconnect = function(discsocket) {
 		for(let socket of clients) {
-			if(socket.uuid != discsocket.uuid)
+			if(socket !== discsocket)
 				socket.send(JSON.stringify(NewDisconnectPacket(discsocket)));
 		}
 		clients.delete(discsocket);
@@ -56,14 +56,14 @@ function Room (uid, gameServer) {
 
 	this.SyncAllForPlayer = function(syncsocket) {
 		for(let socket of clients)
-			if(socket.uuid != syncsocket.uuid  && !ClientsStorage.IsClientIgnoredByClientInGame(socket, syncsocket))
+			if(socket !== syncsocket  && !ClientsStorage.IsClientIgnoredByClientInGame(socket, syncsocket))
 				syncsocket.send(JSON.stringify(socket.syncObject.GetFullSyncData()));
 	}
 
 	this.SyncPlayerForAll = function(syncsocket) {
 		let syncPacket = JSON.stringify(syncsocket.syncObject.GetSyncData());
 		for(let socket of clients) {
-			if(socket.uuid != syncsocket.uuid && !ClientsStorage.IsClientIgnoredByClientInGame(syncsocket, socket))
+			if(socket !== syncsocket && !ClientsStorage.IsClientIgnoredByClientInGame(syncsocket, socket))
 				socket.send(syncPacket);
 		}
 		syncsocket.syncObject.ClearSyncData();
@@ -72,7 +72,7 @@ function Room (uid, gameServer) {
 	this.FullSyncPlayerForAll = function(syncsocket) {
 		let syncPacket = JSON.stringify(syncsocket.syncObject.GetFullSyncData());
 		for(let socket of clients) {
-			if(socket.uuid != syncsocket.uuid && !ClientsStorage.IsClientIgnoredByClientInGame(syncsocket, socket))
+			if(socket !== syncsocket && !ClientsStorage.IsClientIgnoredByClientInGame(syncsocket, socket))
 				socket.send(syncPacket);
 		}
 	}
