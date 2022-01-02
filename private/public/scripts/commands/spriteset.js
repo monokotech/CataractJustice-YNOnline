@@ -295,7 +295,7 @@ function SpriteSetCommand(args) {
 		let id = parseInt(args[2]);
 
 		if(!isNaN(id) || id < 0 || id > 7) {
-			let valid = !spriteList[gameName] || spriteSheetList[gameName].length == 0;
+			let valid = !spriteList[gameName] || spriteSheetList[gameName] == undefined;
 			if(!valid)
 				valid = spriteSheetList[gameName].includes(args[1]);
 			if(valid) {	
