@@ -267,6 +267,8 @@ function initChat() {
 	// so we can communicate with game (to send user preferences)
 	loadOrInitConfig();
 
+	moduleInitialized = true;
+
 	// open global chat only after module has been initialized,
 	// so it can send info messages to the in-game chat
 	YNOnline.Network.globalChat = new Chat(WSAddress, "gchat", true);
@@ -283,3 +285,126 @@ window.onresize = function(event) {
 };
 
 window.onresize();
+
+/*
+		============================
+		============================
+		HTML chat helper integration
+		============================
+		============================
+*/
+
+var moduleInitialized = false; // to know if we can call Module functions
+var chatHelper = document.getElementById("chat_input_helper");
+var gameCanvas = document.getElementById("canvas");
+
+/*
+	Clone HTML chat input events into the game canvas.
+*/
+
+function rerouteEvent(event) {
+	var newEvent = new event.constructor(event.type, event);
+	gameCanvas.dispatchEvent(newEvent);
+}
+chatHelper.addEventListener("contextmenu", rerouteEvent);
+chatHelper.addEventListener("keydown", rerouteEvent);
+chatHelper.addEventListener("keypress", rerouteEvent);
+chatHelper.addEventListener("keyup", rerouteEvent);
+chatHelper.addEventListener("mousedown", rerouteEvent);
+chatHelper.addEventListener("mouseenter", rerouteEvent);
+chatHelper.addEventListener("mouseleave", rerouteEvent);
+chatHelper.addEventListener("mousemove", rerouteEvent);
+chatHelper.addEventListener("touchcancel", rerouteEvent);
+chatHelper.addEventListener("touchend", rerouteEvent);
+chatHelper.addEventListener("touchmove", rerouteEvent);
+chatHelper.addEventListener("touchstart", rerouteEvent);
+chatHelper.addEventListener("webglcontextlost", rerouteEvent);
+chatHelper.addEventListener("wheel", rerouteEvent);
+
+/*
+	Tie HTML chat helper state to the in-game chatbox's state.
+	Chat helper should be focused if and only if game is tabbed into chat.
+*/
+
+// called by game to make HTML chat mirror its focused state
+function setChatFocus(focused) {
+	if(focused) {
+		chatHelper.focus();
+	} else {
+		gameCanvas.focus();
+	}
+}
+// prevent HTML chat input from focusing when in-game chat is closed
+chatHelper.addEventListener("focus", function() {
+	if(!moduleInitialized) {
+		chatHelper.blur();
+	} else {
+		var gameChatOpen = Module._isChatOpen();
+		if(gameChatOpen == 0) {
+			gameCanvas.focus();
+		}
+	}
+});
+// prevent HTML chat input from unfocusing when in-game chat is open
+gameCanvas.addEventListener("focus", function() {
+	if(!moduleInitialized) return;
+	var gameChatOpen = Module._isChatOpen();
+	if(gameChatOpen == 1) {
+		chatHelper.focus();
+	}
+});
+// prevent tabbing out from HTML chat input to other page elements
+function preventTab(event) {
+	if(event.keyCode === 9) {
+		event.preventDefault();
+  }
+}
+chatHelper.addEventListener("keydown", preventTab);
+
+/*
+	Called by game to set type box's state
+*/
+
+function setTypeText(text) {
+	chatHelper.value = text;
+	typeUpdated();
+}
+
+function setTypeMaxChars(c) {
+	chatHelper.maxLength = c;
+}
+
+/*
+	Feed HTML chat helper data into the game.
+*/
+
+function typeUpdated() {
+	if(!moduleInitialized) {
+		chatHelper.value = "";
+	} else {
+		setTimeout(function() { // We need a small time delay provided by setTimeout to get the correct caret position after moving it.
+														// Without it, selectionStart and selectionEnd would have the caret's previous position.
+	    let text = Module.allocate(Module.intArrayFromString(chatHelper.value), Module.ALLOC_NORMAL);
+	    var cTail = chatHelper.selectionStart;
+	    var cHead = chatHelper.selectionEnd;
+	    if(chatHelper.selectionDirection === "backward") {
+	    	var tmp = cTail;
+	    	cTail = cHead;
+	    	cHead = tmp;
+	    }
+			Module._updateTypeDisplay(text, cTail, cHead);
+			Module._free(text);
+	  }, 5);
+	}
+}
+function trySend(event) {
+	if(!moduleInitialized) return;
+	if(event.which === 13) {
+		let text = Module.allocate(Module.intArrayFromString(chatHelper.value), Module.ALLOC_NORMAL);
+		Module._trySendChat(text);
+		Module._free(text);
+	}
+}
+chatHelper.addEventListener("input", typeUpdated);
+chatHelper.addEventListener("keydown", typeUpdated);
+chatHelper.addEventListener("keydown", trySend);
