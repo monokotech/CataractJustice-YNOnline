@@ -367,7 +367,7 @@ chatHelper.addEventListener("keydown", preventTab);
 
 function setTypeText(text) {
 	chatHelper.value = text;
-	typeTextUpdated();
+	typeUpdated();
 }
 
 function setTypeMaxChars(c) {
@@ -378,30 +378,31 @@ function setTypeMaxChars(c) {
 	Feed HTML chat helper data into the game.
 */
 
-function typeTextUpdated() {
+var previousTypeText = ""; // store previously commited text so helper only calls game to redraw if it changed.
+
+function typeUpdated() {
 	if(!moduleInitialized) {
 		chatHelper.value = "";
 	} else {
-		let text = Module.allocate(Module.intArrayFromString(chatHelper.value), Module.ALLOC_NORMAL);
-		Module._updateTypeDisplayText(text);
-		Module._free(text);
-
-		typeCaretUpdated();
+		setTimeout(function() { // We need a small time delay provided by setTimeout to get the correct caret position after moving it.
+														// Without it, selectionStart and selectionEnd would have the caret's previous position.
+	    var cTail = chatHelper.selectionStart;
+	    var cHead = chatHelper.selectionEnd;
+	    if(chatHelper.selectionDirection === "backward") {
+	    	var tmp = cTail;
+	    	cTail = cHead;
+	    	cHead = tmp;
+	    }
+	    if(previousTypeText === chatHelper.value) { // text is the same, only move caret
+	    	Module._updateTypeDisplayCaret(cTail, cHead);
+	    } else { // redraw text and move caret
+	    	previousTypeText = chatHelper.value;
+	    	let text = Module.allocate(Module.intArrayFromString(chatHelper.value), Module.ALLOC_NORMAL);
+				Module._updateTypeDisplayText(text, cTail, cHead);
+				Module._free(text);
+	    }
+	  }, 5);
 	}
-}
-function typeCaretUpdated() {
-	if(!moduleInitialized) return;
-	setTimeout(function() { // We need a small time delay provided by setTimeout to get the correct caret position after moving it.
-													// Without it, selectionStart and selectionEnd would have the caret's previous position.
-    var cTail = chatHelper.selectionStart;
-    var cHead = chatHelper.selectionEnd;
-    if(chatHelper.selectionDirection === "backward") {
-    	var tmp = cTail;
-    	cTail = cHead;
-    	cHead = tmp;
-    }
-		Module._updateTypeDisplayCaret(cTail, cHead);
-  }, 5);
 }
 function trySend(event) {
 	if(!moduleInitialized) return;
@@ -411,6 +412,6 @@ function trySend(event) {
 		Module._free(text);
 	}
 }
-chatHelper.addEventListener("input", typeTextUpdated);
-chatHelper.addEventListener("keydown", typeCaretUpdated);
+chatHelper.addEventListener("input", typeUpdated);
+chatHelper.addEventListener("keydown", typeUpdated);
 chatHelper.addEventListener("keydown", trySend);
