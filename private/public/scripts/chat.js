@@ -367,7 +367,7 @@ chatHelper.addEventListener("keydown", preventTab);
 
 function setTypeText(text) {
 	chatHelper.value = text;
-	typeUpdated();
+	typeTextUpdated();
 }
 
 function setTypeMaxChars(c) {
@@ -378,34 +378,39 @@ function setTypeMaxChars(c) {
 	Feed HTML chat helper data into the game.
 */
 
-function typeUpdated() {
+function typeTextUpdated() {
 	if(!moduleInitialized) {
 		chatHelper.value = "";
 	} else {
-		setTimeout(function() { // We need a small time delay provided by setTimeout to get the correct caret position after moving it.
-														// Without it, selectionStart and selectionEnd would have the caret's previous position.
-	    let text = Module.allocate(Module.intArrayFromString(chatHelper.value), Module.ALLOC_NORMAL);
-	    var cTail = chatHelper.selectionStart;
-	    var cHead = chatHelper.selectionEnd;
-	    if(chatHelper.selectionDirection === "backward") {
-	    	var tmp = cTail;
-	    	cTail = cHead;
-	    	cHead = tmp;
-	    }
-			Module._updateTypeDisplay(text, cTail, cHead);
-			Module._free(text);
-	  }, 5);
+		let text = Module.allocate(Module.intArrayFromString(chatHelper.value), Module.ALLOC_NORMAL);
+		Module._updateTypeDisplayText(text);
+		Module._free(text);
+
+		typeCaretUpdated();
 	}
+}
+function typeCaretUpdated() {
+	if(!moduleInitialized) return;
+	setTimeout(function() { // We need a small time delay provided by setTimeout to get the correct caret position after moving it.
+													// Without it, selectionStart and selectionEnd would have the caret's previous position.
+    var cTail = chatHelper.selectionStart;
+    var cHead = chatHelper.selectionEnd;
+    if(chatHelper.selectionDirection === "backward") {
+    	var tmp = cTail;
+    	cTail = cHead;
+    	cHead = tmp;
+    }
+		Module._updateTypeDisplayCaret(cTail, cHead);
+  }, 5);
 }
 function trySend(event) {
 	if(!moduleInitialized) return;
 	if(event.which === 13) {
-		if(/\p{Extended_Pictographic}/u.test(chatHelper.value)) return;
 		let text = Module.allocate(Module.intArrayFromString(chatHelper.value), Module.ALLOC_NORMAL);
 		Module._trySendChat(text);
 		Module._free(text);
 	}
 }
-chatHelper.addEventListener("input", typeUpdated);
-chatHelper.addEventListener("keydown", typeUpdated);
+chatHelper.addEventListener("input", typeTextUpdated);
+chatHelper.addEventListener("keydown", typeCaretUpdated);
 chatHelper.addEventListener("keydown", trySend);
