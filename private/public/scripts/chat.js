@@ -378,13 +378,14 @@ function setTypeMaxChars(c) {
 	Feed HTML chat helper data into the game.
 */
 
+var previousTypeText = ""; // store previously commited text so helper only calls game to redraw if it changed.
+
 function typeUpdated() {
 	if(!moduleInitialized) {
 		chatHelper.value = "";
 	} else {
 		setTimeout(function() { // We need a small time delay provided by setTimeout to get the correct caret position after moving it.
 														// Without it, selectionStart and selectionEnd would have the caret's previous position.
-	    let text = Module.allocate(Module.intArrayFromString(chatHelper.value), Module.ALLOC_NORMAL);
 	    var cTail = chatHelper.selectionStart;
 	    var cHead = chatHelper.selectionEnd;
 	    if(chatHelper.selectionDirection === "backward") {
@@ -392,15 +393,20 @@ function typeUpdated() {
 	    	cTail = cHead;
 	    	cHead = tmp;
 	    }
-			Module._updateTypeDisplay(text, cTail, cHead);
-			Module._free(text);
+	    if(previousTypeText === chatHelper.value) { // text is the same, only move caret
+	    	Module._updateTypeDisplayCaret(cTail, cHead);
+	    } else { // redraw text and move caret
+	    	previousTypeText = chatHelper.value;
+	    	let text = Module.allocate(Module.intArrayFromString(chatHelper.value), Module.ALLOC_NORMAL);
+				Module._updateTypeDisplayText(text, cTail, cHead);
+				Module._free(text);
+	    }
 	  }, 5);
 	}
 }
 function trySend(event) {
 	if(!moduleInitialized) return;
 	if(event.which === 13) {
-		if(/\p{Extended_Pictographic}/u.test(chatHelper.value)) return;
 		let text = Module.allocate(Module.intArrayFromString(chatHelper.value), Module.ALLOC_NORMAL);
 		Module._trySendChat(text);
 		Module._free(text);
