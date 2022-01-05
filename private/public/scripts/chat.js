@@ -407,6 +407,7 @@ function typeUpdated() {
 function trySend(event) {
 	if(!moduleInitialized) return;
 	if(event.which === 13) {
+		if(/\p{Extended_Pictographic}/u.test(chatHelper.value)) return;
 		let text = Module.allocate(Module.intArrayFromString(chatHelper.value), Module.ALLOC_NORMAL);
 		Module._trySendChat(text);
 		Module._free(text);
