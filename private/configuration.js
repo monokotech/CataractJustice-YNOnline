@@ -23,7 +23,7 @@ global.config =
 	shouldSendPings: true,
 	pingInterval_ms: 15000,
 
-	switchsync: false
+	switchsync: true
 }
 
 if(global.config.https) {

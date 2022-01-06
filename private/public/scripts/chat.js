@@ -1,5 +1,4 @@
 ENV.SDL_EMSCRIPTEN_KEYBOARD_ELEMENT = "#canvas";
-Module['onRuntimeInitialized'] = initChat;
 
 let chatMessagesContainer = document.getElementById("messages");
 let chatInputContainer = document.getElementById("chatInputContainer");
@@ -259,10 +258,6 @@ YNOnline.Network.globalChat = null;
 YNOnline.Network.localChat = null;
 
 function initChat() {
-  let host = Module.allocate(Module.intArrayFromString(WSAddress), Module.ALLOC_NORMAL);
-	Module._SetWSHost(host);
-	Module._free(host);
-
 	// loads user config only after module has been initialized,
 	// so we can communicate with game (to send user preferences)
 	loadOrInitConfig();
