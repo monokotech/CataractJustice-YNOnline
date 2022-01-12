@@ -263,18 +263,16 @@ let spriteList = {
 
 function SpriteListCommand(args) {
 	let liststr = "";
-	if(!spriteList[gameName]) {
-		liststr = "default";
-	} else {
+	liststr = "default\n";
+	if(spriteList[gameName]) {
 		let keys = Object.keys(spriteList[gameName]);
-		liststr += "default\n";
 		for(let k of keys) {
 			liststr += k + "\n";
 		}
 	}
 
 	if(Object.keys(favsprites).length) {
-		liststr += "***===favourites===***\n";
+		liststr += "\n***===favourites===***\n";
 		for(let favsprite in favsprites) {
 			liststr += favsprite + "\n";
 		}
@@ -286,8 +284,7 @@ function SpriteListCommand(args) {
 
 function SpriteSetCommand(args) {
 	if(args.length == 2) {
-		if(!spriteList[gameName] && args[1] != "default")
-			return false;
+		let sprite = undefined;
 		
 		if(args[1] == "default") {
 			sprite = {sheet: "", id: 0};
@@ -295,7 +292,7 @@ function SpriteSetCommand(args) {
 			//trying to find sprite name in favorite sprites
 			sprite = favsprites[args[1]];
 			//if sprite was not found in favorites then try to find it in default sprite list
-			if(!sprite)
+			if(!sprite && spriteList[gameName])
 				sprite = spriteList[gameName][args[1]];
 		
 
