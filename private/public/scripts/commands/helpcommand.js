@@ -60,6 +60,16 @@ let helpData = {
 	pcm: {
 		tip: "Switch messages about players connecting/disconnecting to current room on/off",
 		help: "/pcm"
+	},
+
+	spritefav: {
+		tip: "Make shortcut for sprite sheet and index to use with /spriteset",
+		help: "/spritefav <sheet> <index> <name>"
+	},
+
+	spriteunfav: {
+		tip: "Remove shortcut for sprite",
+		help: "/spriteunfav <name>"
 	}
 }
 

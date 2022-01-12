@@ -11,7 +11,9 @@ let commands = {
 	pardonchat: PardonChatCommand,
 	pardongame: PardonGameCommand,
 	rcm: RoomConnectionMessagesSwitchCommand,
-	pcm: PlayerRoomConnectionMessagesSwitchCommand
+	pcm: PlayerRoomConnectionMessagesSwitchCommand,
+	spritefav: SpriteFavCommand,
+	spriteunfav: SpriteUnfavCommand
 }
 
 
