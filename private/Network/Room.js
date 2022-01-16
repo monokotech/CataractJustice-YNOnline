@@ -17,7 +17,9 @@ let PacketTypes =
 	animframe: 10,
 	facing: 11,
 	typingstatus: 12,
-	syncme: 13
+	syncme: 13,
+	flash: 14,
+	flashpause: 15
 }
 
 function Room (uid, gameServer) {
@@ -165,6 +167,19 @@ function Room (uid, gameServer) {
 				if(Object.keys(socket.syncObject.syncData).length > 2)
 					self.SyncPlayerForAll(socket);
 			break;
+			case PacketTypes.flash:
+				let flashPacket = ParseFlashPacket(data);
+				if(flashPacket) {
+					socket.syncObject.SetFlash(flashPacket);
+				}
+			break;
+			case PacketTypes.flashpause:
+				let flashPausePacket = ParseFlashPausePacket(data);
+
+				if(flashPausePacket) {
+					socket.syncObject.SetFlashPause(flashPausePacket);
+				}
+			break;
 		}
 		}
 	}
@@ -273,6 +288,20 @@ function Room (uid, gameServer) {
 	function ParseTypingstatusPacket(data) {
 		if(data.length == 4) {
 			return {typingstatus: data.readUInt16LE(2)};
+		}
+		return undefined;
+	}
+
+	function ParseFlashPacket(data) {
+		if(data.length == 12) {
+			return {flash: [data.readUInt16LE(2), data.readUInt16LE(4), data.readUInt16LE(6), data.readUInt16LE(8), data.readUInt16LE(10)]}
+		}
+		return undefined;
+	}
+
+	function ParseFlashPausePacket(data) {
+		if(data.length == 4) {
+			return {flashpause: (data.readUInt16LE(2) == 0 ? false : true)};
 		}
 		return undefined;
 	}

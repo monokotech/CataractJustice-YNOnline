@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const { setDefaultResultOrder } = require('dns');
 
 let lastid = 0;
 
@@ -11,6 +12,8 @@ function SyncObject() {
 	this.movementAnimationSpeed = 4;
 	this.facing = 0;
 	this.typingstatus = 0;
+	this.flash = [0, 0, 0, 0, 0];
+	this.flashpause = false;
 
 	let self = this;
 
@@ -80,9 +83,33 @@ function SyncObject() {
 		self.syncData.typingstatus = args.typingstatus;
 	}
 
+	this.SetFlash = function(args) {
+		self.flash = args.flash;
+		self.syncData.flash = args.flash;
+	}
+
+	this.SetFlashPause = function (args) {
+		self.flashpause = args.flashpause;
+		self.syncData.flashpause = args.flashpause;
+	}
+
 	//returns everything you need to sync player on room entering
 	this.GetFullSyncData = function() {
-		return { type: "objectSync", uid: self.uid, pos: self.pos, sprite: self.sprite, name: self.name, movementAnimationSpeed: self.movementAnimationSpeed, facing: self.facing};
+		let packet = { 
+			type: "objectSync", 
+			uid: self.uid, 
+			pos: self.pos, 
+			sprite: self.sprite, 
+			name: self.name, 
+			movementAnimationSpeed: self.movementAnimationSpeed, 
+			facing: self.facing,
+			};
+
+		if (self.flashpause) {
+			packet.flash = self.flash;
+		}
+
+		return packet;
 	}
 }
 
