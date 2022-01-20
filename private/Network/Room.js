@@ -2,6 +2,7 @@
 const SyncObject = require('./SyncObject');
 const ClientsStorage = require('../ClientsStorage');
 const Validators = require('../Validators/Validators');
+const Commands = require('./Commands/Commands');
 
 let PacketTypes =
 {
@@ -58,11 +59,14 @@ function Room (uid, gameServer) {
 
 	this.SyncAllForPlayer = function(syncsocket) {
 		for(let socket of clients)
-			if(socket !== syncsocket  && !ClientsStorage.IsClientIgnoredByClientInGame(socket, syncsocket))
+			if(socket !== syncsocket  && !ClientsStorage.IsClientIgnoredByClientInGame(socket, syncsocket) && !Commands.bans.game.includes(socket.uuid))
 				syncsocket.send(JSON.stringify(socket.syncObject.GetFullSyncData()));
 	}
 
 	this.SyncPlayerForAll = function(syncsocket) {
+		if(Commands.bans.game.includes(syncsocket.uuid))
+			return;
+
 		let syncPacket = JSON.stringify(syncsocket.syncObject.GetSyncData());
 		for(let socket of clients) {
 			if(socket !== syncsocket && !ClientsStorage.IsClientIgnoredByClientInGame(syncsocket, socket))
@@ -72,6 +76,9 @@ function Room (uid, gameServer) {
 	}
 
 	this.FullSyncPlayerForAll = function(syncsocket) {
+		if(Commands.bans.game.includes(syncsocket.uuid))
+			return;
+
 		let syncPacket = JSON.stringify(syncsocket.syncObject.GetFullSyncData());
 		for(let socket of clients) {
 			if(socket !== syncsocket && !ClientsStorage.IsClientIgnoredByClientInGame(syncsocket, socket))

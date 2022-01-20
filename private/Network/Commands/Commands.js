@@ -5,18 +5,22 @@ let bans = {
 	game: []
 }
 
-let oplist = [];
+let oplist = ["MeeRoI2vww"];
 
 function BanChatCommand(socket, args) {
 	if(args.length == 2) {
 		bans.chat.push(args[1]);
+		return "User added to chat ban list";
 	}
+	return "Invalid arguments use /banchat <uuid>";
 }
 
 function BanGameCommand(socket, args) {
 	if(args.length == 2) {
 		bans.game.push(args[1]);
+		return "User added to game ban list";
 	}
+	return "Invalid arguments use /bangame <uuid>";
 }
 
 let OpCommandsList = {

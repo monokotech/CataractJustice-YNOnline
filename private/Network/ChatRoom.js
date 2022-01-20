@@ -62,7 +62,7 @@ function ChatRoom(gameName) {
 				}
 
 				if(typeof msgjson.text === "string")
-					Broadcast(socket, JSON.stringify({type: "userMessage", text: msgjson.text, name: socket.name, trip: socket.trip}));
+					Broadcast(socket, JSON.stringify({type: "userMessage", text: msgjson.text, name: socket.name + "#" + socket.uuid, trip: socket.trip}));
 			}
 			else {
 				if(typeof msgjson.name !== "string" || typeof msgjson.trip !== "string") {

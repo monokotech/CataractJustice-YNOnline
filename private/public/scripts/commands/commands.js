@@ -13,7 +13,9 @@ let commands = {
 	rcm: RoomConnectionMessagesSwitchCommand,
 	pcm: PlayerRoomConnectionMessagesSwitchCommand,
 	spritefav: SpriteFavCommand,
-	spriteunfav: SpriteUnfavCommand
+	spriteunfav: SpriteUnfavCommand,
+	banchat: RemoteCommand,
+	bangame: RemoteCommand
 }
 
 
