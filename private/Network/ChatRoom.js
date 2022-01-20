@@ -1,6 +1,7 @@
 const ClientsStorage = require('../ClientsStorage');
 const tripcode = require('tripcode');
 const Validators = require('../Validators/Validators');
+const Commands = require('./Commands/Commands');
 
 function ChatRoom(gameName) {
 	let clients = new Set();
@@ -11,6 +12,9 @@ function ChatRoom(gameName) {
 	}
 
 	function Broadcast(broadsocket, message, otherSocketsOnly) {
+		if(Commands.bans.chat.includes(broadsocket.uuid))
+			return;
+
 		for(let socket of clients) {
 			if(!ClientsStorage.IsClientIgnoredByClientInChat(broadsocket, socket) && !(otherSocketsOnly && socket.uuid == broadsocket.uuid))
 				if(typeof message == 'object')
@@ -52,84 +56,11 @@ function ChatRoom(gameName) {
 				return;
 
 			if(socket.name && socket.trip) {
-
-				if(msgjson.pardonchat) {
-					if(typeof msgjson.pardonchat.uuid === "string") {
-						let ignoredSocket = ClientsStorage.SessionClients.sockets[msgjson.pardonchat.uuid];
-						if(ignoredSocket) {
-							ignoredSocket.storageInstance.chatignores = ignoredSocket.storageInstance.chatignores.filter(uuid => uuid == msgjson.pardonchat.uuid);
-							socket.send(JSON.stringify({type: "serverInfo", text: "User succesfully unignored"}));
-							return;
-						}
-					}
-					socket.send(JSON.stringify({type: "serverInfo", text: "Failed to unignore player"}));
-					return;
+				
+				if(Array.isArray(msgjson.command)) {
+					socket.send(JSON.stringify({type: "serverInfo", text: Commands.ExecuteCommand(socket, msgjson.command)}));
 				}
 
-				if(msgjson.pardongame) {
-					if(typeof msgjson.pardongame.uuid === "string") {
-						let ignoredSocket = ClientsStorage.SessionClients.sockets[msgjson.pardongame.uuid];
-						if(ignoredSocket) {
-							ignoredSocket.storageInstance.gameignores = ignoredSocket.storageInstance.gameignores.filter(uuid => uuid == msgjson.pardongame.uuid);
-							socket.send(JSON.stringify({type: "serverInfo", text: "User succesfully unignored"}));
-							return;
-						}
-					}
-					socket.send(JSON.stringify({type: "serverInfo", text: "Failed to unignore player"}));
-					return;
-				}
-
-				if(msgjson.ignorechat) {
-					if(typeof msgjson.ignorechat.uuid === "string") {
-						let ignoredSocket = ClientsStorage.SessionClients.sockets[msgjson.ignorechat.uuid];
-						if(ignoredSocket) {
-							ignoredSocket.storageInstance.chatignores.push(socket.trip)
-							socket.send(JSON.stringify({type: "serverInfo", text: "User succesfully ignored"}));
-							return;
-						}
-					}
-					socket.send(JSON.stringify({type: "serverInfo", text: "Failed to ignore player"}));
-					return;
-				}
-
-				if(msgjson.ignoregame) {
-					if(typeof msgjson.ignoregame.uuid === "string") {
-						let ignoredSocket = ClientsStorage.SessionClients.sockets[msgjson.ignoregame.uuid];
-						if(ignoredSocket) {
-							ignoredSocket.storageInstance.gameignores.push(socket.trip)
-							socket.send(JSON.stringify({type: "serverInfo", text: "User succesfully ignored"}));
-							return;
-						}
-					}
-					socket.send(JSON.stringify({type: "serverInfo", text: "Failed to ignore player"}));
-					return;
-				}
-
-				if(msgjson.getuuid) {
-
-					let responce = "";
-	
-					if(msgjson.getuuid == "*") {
-						if(!isNaN(parseInt(msgjson.room))) {
-							let clients = YNOnline.Network.gameServer[gameName].GetRoomByID(parseInt(msgjson.room)).GetClients();
-							for(let client of clients) {
-								responce += client.name;
-								responce += ": ";
-								responce += client.uuid;
-								responce += "\n";
-							}
-						}
-					} else if(typeof msgjson === "string"){
-						for(let client of clients) {
-							if(client.trip === msgjson.getuuid) {
-								responce = client.uuid;
-								break;
-							}
-						}
-					}
-					socket.send(JSON.stringify({type: "serverInfo", text: responce}));
-					return;
-				}
 				if(typeof msgjson.text === "string")
 					Broadcast(socket, JSON.stringify({type: "userMessage", text: msgjson.text, name: socket.name, trip: socket.trip}));
 			}
@@ -155,6 +86,12 @@ function ChatRoom(gameName) {
 
 					socket.name = msgjson.name;
 					socket.trip = tripcode(msgjson.trip);
+
+					for(let s of ClientsStorage.SessionClients[socket.address].sockets) {
+						if(s)
+						s.trip = socket.trip;
+					}
+
 					Broadcast(socket, JSON.stringify({type: "userConnect", name: socket.name, trip: socket.trip}), true);
 				}
 			}

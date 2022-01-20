@@ -8,19 +8,20 @@ let SessionClients = {
 let lastUUID = 0;
 
 function RegisterConnection(socket) {
+
 	if(!SessionClients[socket.address]) {
 		SessionClients[socket.address] = {};
 		SessionClients[socket.address].uuids = [(lastUUID++).toString()];
 		SessionClients[socket.address].chatignores = [];
 		SessionClients[socket.address].gameignores = [];
-		SessionClients[socket.address].sockets = {};
+		SessionClients[socket.address].sockets = [];
 	}
 
 	socket.uuid = SessionClients[socket.address].uuids[0];
 	//socket.uuid = crypto.randomUUID();
 	//SessionClients[socket.address].uuids.push(socket.uuid);
 
-	SessionClients[socket.address].sockets[socket.uuid] = socket;
+	SessionClients[socket.address].sockets.push(socket);
 	SessionClients.sockets[socket.uuid] = socket;
 	return SessionClients[socket.address];
 }
