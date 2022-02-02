@@ -15,11 +15,15 @@
 :root {
       --color-gray: hsl(0, 0%, 55%);
       --controls-size: 10vh;
+	  --custom-controls-size: 8vh;
+	  --custom-controls-font-size: 6vh;
     }
 
     @media (orientation: landscape) {
       :root {
         --controls-size: 20vh;
+	  --custom-controls-size: 16vh;
+	  --custom-controls-font-size: 10vh;
       }
     }
 
@@ -90,7 +94,14 @@
 
 	#npad {
 		position: fixed;
-		top: 1rem;
+		top: 1.0rem;
+	}
+
+	#npad *{
+		margin: 0;
+		padding: 0;
+		text-align: center;
+		vertical-align: center;
 	}
 
     #dpad {
@@ -124,12 +135,12 @@
     }
 
 	#npad > * {
-      width: var(--controls-size);
-      height: var(--controls-size);
+      width: var(--custom-controls-size);
+      height: var(--custom-controls-size);
       background-color: var(--color-gray);
       border-radius: 50%;
 	  display: inline-block;
-	  font-size: var(--controls-size);
+	  font-size: var(--custom-controls-font-size);
 	  text-align: center;
     }
 

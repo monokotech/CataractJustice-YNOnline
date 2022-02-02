@@ -12,11 +12,15 @@ function ChatRoom(gameName) {
 	}
 
 	function Broadcast(broadsocket, message, otherSocketsOnly) {
-		if(Commands.bans.chat.includes(broadsocket.uuid))
-			return;
 
 		for(let socket of clients) {
-			if(!ClientsStorage.IsClientIgnoredByClientInChat(broadsocket, socket) && !(otherSocketsOnly && socket.uuid == broadsocket.uuid))
+			if(
+				!ClientsStorage.IsClientIgnoredByClientInChat(broadsocket, socket) && 
+				!(otherSocketsOnly && socket.uuid == broadsocket.uuid) &&
+				//when user is chat-banned we still want to send them their messages even if they'll join from another tab
+				//that will prevent users from easily realising that they were banned
+				!(Commands.bans.chat.includes(broadsocket.uuid) && broadsocket.uuid != socket.uuid) 
+			)
 				if(typeof message == 'object')
 					socket.send(JSON.stringify(message));
 				else

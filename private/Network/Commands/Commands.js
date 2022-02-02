@@ -23,9 +23,23 @@ function BanGameCommand(socket, args) {
 	return "Invalid arguments use /bangame <uuid>";
 }
 
+function BanList(socket, args) {
+	let responce = "";
+	responce += "chat: \n"
+	for(let uuid of bans.chat)
+		responce += uuid + "\n";
+
+	responce += "game: \n"
+	for(let uuid of bans.game)
+		responce += uuid + "\n";
+
+	return responce;
+}
+
 let OpCommandsList = {
 	banchat: BanChatCommand,
-	bangame: BanGameCommand
+	bangame: BanGameCommand,
+	banlist: BanList
 }
 
 let CommandsList = {

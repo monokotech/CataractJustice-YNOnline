@@ -6,11 +6,15 @@
   <link rel="stylesheet" href="styles/chat.css">
   <link rel="stylesheet" href="styles/erpg.css">
   <link rel="stylesheet" href="styles/style.css">
+  <meta name="viewport" content="user-scalable=0">
 </head>
 <body>
+
   <div id="layout">
     <div id="main_container">
         <div id="game_container">
+			
+
             <div id="controls">
               <button id="controls-fullscreen" class="unselectable">
                 <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" width="25" height="25"><path d="M13.5 13.5H10m3.5 0V10m0 3.5l-4-4m.5-8h3.5m0 0V5m0-3.5l-4 4M5 1.5H1.5m0 0V5m0-3.5l4 4m-4 4.5v3.5m0 0H5m-3.5 0l4-4"></path></svg>
@@ -26,11 +30,7 @@
             	<canvas id="canvas" tabindex="-1"></canvas>
 						</div>
 			
-			<div id="npad", class="unselectable"> 
-              <div id="npad-num1" data-key="Num1" data-key-code="49">1</div>
-              <div id="npad-num3" data-key="Num3" data-key-code="51">3</div>
-              <div id="npad-num5" data-key="Num5" data-key-code="53">5</div>
-              <div id="npad-num9" data-key="Num9" data-key-code="57">9</div>
+			<div id="npad", class="unselectable">
 			</div>
 
             <div id="dpad" class="unselectable">
@@ -129,6 +129,7 @@
 <script type="text/javascript" src="scripts/gameapi.js"></script>
 <script type="text/javascript" src="scripts/ingameapi.js"></script>
 <script type="text/javascript" src="scripts/ynonline.js"></script>
+<script type="text/javascript" src="scripts/controls.js"></script>
 <script type="text/javascript" src="index.js"></script>
 <script type="text/javascript" src="scripts/chat.js"></script>
 <script type="text/javascript" src="scripts/erpg.js"></script>
