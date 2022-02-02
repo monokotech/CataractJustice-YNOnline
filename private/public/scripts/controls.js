@@ -7,42 +7,43 @@ let additionalControls = {
 	],
 	"2kki": [
 		//shift
-		{name: "↑", data_key_code: "16"}
+		{name: "↑", data_key: "Shift", data_key_code: "16"}
 	]
 }
 
 let debugControls = [
-	{name: "░", data_key_code: "17"},
-	{name: "F", data_key_code: "70"},
-	{name: "G", data_key_code: "71"}
-]
+	{name: "░", data_key: "Tab", data_key_code: "17"},
+	{name: "F", data_key: "F", data_key_code: "70"},
+	{name: "G", data_key: "G", data_key_code: "71"}
+];
+
+let npad = document.getElementById("npad");
+
+function addMobileControl() {
+	let keynode = document.createElement("div");
+	keynode.id = key.name + "_mobile_key";
+	keynode.innerText = key.name;
+	keynode.dataset["key"] = key.data_key;
+	keynode.dataset["keyCode"] = key.data_key_code;
+	npad.appendChild(keynode);
+}
 
 function initControls() {
-	let npad = document.getElementById("npad");
-
-	console.log(gameName);
+	npad = document.getElementById("npad");
 	
 	if(urlParams.get("test-play") === '') {
 		for(let key of debugControls) {
-			let keynode = document.createElement("div");
-			keynode.id = key.name;
-			keynode.innerText = key.name;
-			keynode.dataset["key"] = key.data_key;
-			keynode.dataset["keyCode"] = key.data_key_code;
-			npad.appendChild(keynode);
+			addMobileControl(key);
 		}
 	}
 
 	if(additionalControls[gameName]) {
 		for(let key of additionalControls[gameName]) {
-			let keynode = document.createElement("div");
-			keynode.id = key.name;
-			keynode.innerText = key.name;
-			keynode.dataset["key"] = key.data_key;
-			keynode.dataset["keyCode"] = key.data_key_code;
-			npad.appendChild(keynode);
+			addMobileControl(key);
 		}
 	}
+
+	addMobileControl({name: "💬", data_key: "Tab", data_key_code: "9"});
 }
 
 initControls();
