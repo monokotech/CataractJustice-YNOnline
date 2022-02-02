@@ -12,7 +12,6 @@ let additionalControls = {
 }
 
 let debugControls = [
-<<<<<<< HEAD
 	{name: "░", data_key: "Ctrl", data_key_code: "17"},
 	{name: "F", data_key: "F", data_key_code: "70"},
 	{name: "G", data_key: "G", data_key_code: "71"}
@@ -36,49 +35,17 @@ function initControls() {
 	if(urlParams.get("test-play") === '') {
 		for(let key of debugControls) {
 			addControl(key);
-=======
-	{name: "░", data_key: "Tab", data_key_code: "17"},
-	{name: "F", data_key: "F", data_key_code: "70"},
-	{name: "G", data_key: "G", data_key_code: "71"}
-];
-
-let npad = document.getElementById("npad");
-
-function addMobileControl() {
-	let keynode = document.createElement("div");
-	keynode.id = key.name + "_mobile_key";
-	keynode.innerText = key.name;
-	keynode.dataset["key"] = key.data_key;
-	keynode.dataset["keyCode"] = key.data_key_code;
-	npad.appendChild(keynode);
-}
-
-function initControls() {
-	npad = document.getElementById("npad");
-	
-	if(urlParams.get("test-play") === '') {
-		for(let key of debugControls) {
-			addMobileControl(key);
->>>>>>> a5cfe1041af7e9c474b529d963eb243bb1c6424b
 		}
 	}
 
 	if(additionalControls[gameName]) {
 		for(let key of additionalControls[gameName]) {
-<<<<<<< HEAD
 			addControl(key);
 		}
 	}
 
 	//add chat button
 	addControl({name: "💬", data_key: "Tab", data_key_code: "9"});
-=======
-			addMobileControl(key);
-		}
-	}
-
-	addMobileControl({name: "💬", data_key: "Tab", data_key_code: "9"});
->>>>>>> a5cfe1041af7e9c474b529d963eb243bb1c6424b
 }
 
 initControls();
