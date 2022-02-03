@@ -153,7 +153,6 @@
     @media (hover: hover) and (pointer: fine) {
       #apad,
       #dpad,
-<<<<<<< HEAD
 	  #npad 
 	  {
         display: none;
@@ -163,13 +162,3 @@
 #chatboxContainer {
     display: none;
 }
-=======
-	  #npad {
-        display: none;
-      }
-    }
-
-	#chatboxContainer {
-        display: none;
-      }
->>>>>>> a5cfe1041af7e9c474b529d963eb243bb1c6424b
