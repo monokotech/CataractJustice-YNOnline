@@ -93,6 +93,10 @@ function SyncObject() {
 		self.syncData.flashpause = args.flashpause;
 	}
 
+	this.MoveNpc = function(args) {
+		self.syncData.npcmove = args;
+	}
+
 	//returns everything you need to sync player on room entering
 	this.GetFullSyncData = function() {
 		let packet = { 

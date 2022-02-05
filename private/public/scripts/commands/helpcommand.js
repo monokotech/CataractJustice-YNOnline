@@ -70,6 +70,11 @@ let helpData = {
 	spriteunfav: {
 		tip: "Remove shortcut for sprite",
 		help: "/spriteunfav <name>"
+	},
+
+	switchnpcsync: {
+		tip: "Switch NPC synchronisation",
+		help: "/switchnpcsync"
 	}
 }
 
@@ -81,7 +86,7 @@ function HelpCommand(args) {
 		}
 	} else if(args.length == 2) {
 		if(helpData[args[1]]) {
-			PrintChatInfo(helpData[args[1]].help, "Help")
+			PrintChatInfo(helpData[args[1]].help + "\n" + helpData[args[1]].tip, "Help")
 		}
 		else {
 			PrintChatInfo("Unknown command", "Help")

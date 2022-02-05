@@ -20,7 +20,8 @@ let PacketTypes =
 	typingstatus: 12,
 	syncme: 13,
 	flash: 14,
-	flashpause: 15
+	flashpause: 15,
+	npcmove: 16
 }
 
 function Room (uid, gameServer) {
@@ -28,6 +29,21 @@ function Room (uid, gameServer) {
 	let syncObjects = new Set();
 	let clients = new Set();
 	let self = this;
+	let rngSeed = parseInt(Math.random() * 2147483647);
+
+	let rngInterval = setInterval(function() {
+		//every once in a while we change room seed so game characters don't get stuck in a movement loop
+		if(self) {
+			rngSeed = parseInt(Math.random() * 2147483647);
+			self.Broadcast(self.NewRngSeedPacket());
+		} else {
+			clearInterval(rngInterval);
+		}
+	}, 2000);
+
+	this.NewRngSeedPacket = function() {
+		return {type: "rngSeed", seed: rngSeed};
+	}
 
 	this.PlayerCount = function() {
 		return clients.size;
@@ -44,6 +60,9 @@ function Room (uid, gameServer) {
 			socket.syncObject.SetName({name:  config.defaultName});
 			socket.name = {name:  config.defaultName};
 		}
+
+		socket.send(JSON.stringify(this.NewRngSeedPacket()));
+
 		self.SyncAllForPlayer(socket);
 		self.FullSyncPlayerForAll(socket);
 	}
@@ -55,6 +74,12 @@ function Room (uid, gameServer) {
 		}
 		clients.delete(discsocket);
 		syncObjects.delete(discsocket.syncObject);
+	}
+
+	this.Broadcast = function(data) {
+		for(let socket of clients) {
+			socket.send(JSON.stringify(data));
+		}
 	}
 
 	this.SyncAllForPlayer = function(syncsocket) {
@@ -87,7 +112,6 @@ function Room (uid, gameServer) {
 	}
 
 	this.ProcessPacket = function(socket, data) {
-
 		if(data.readUInt16LE) {
 		switch(data.readUInt16LE(0)) {
 			case PacketTypes.movement:
@@ -185,6 +209,14 @@ function Room (uid, gameServer) {
 
 				if(flashPausePacket) {
 					socket.syncObject.SetFlashPause(flashPausePacket);
+				}
+			break;
+			case PacketTypes.npcmove:
+				let npcmovePacket = ParseNpcMovePacket(data);
+
+				if(npcmovePacket) {
+					socket.syncObject.MoveNpc(npcmovePacket);
+					socket.send(JSON.stringify({type: "objectSync", uid: "room", npcmove: npcmovePacket}));
 				}
 			break;
 		}
@@ -309,6 +341,13 @@ function Room (uid, gameServer) {
 	function ParseFlashPausePacket(data) {
 		if(data.length == 4) {
 			return {flashpause: (data.readUInt16LE(2) == 0 ? false : true)};
+		}
+		return undefined;
+	}
+
+	function ParseNpcMovePacket(data) {
+		if(data.length == 10) {
+			return {x: data.readUInt16LE(2), y: data.readUInt16LE(4), facing: data.readUInt16LE(6), id: data.readUInt16LE(8)};
 		}
 		return undefined;
 	}

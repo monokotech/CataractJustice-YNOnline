@@ -15,7 +15,8 @@ let commands = {
 	spritefav: SpriteFavCommand,
 	spriteunfav: SpriteUnfavCommand,
 	banchat: RemoteCommand,
-	bangame: RemoteCommand
+	bangame: RemoteCommand,
+	switchnpcsync: function() { Module._SwitchNpcSync(); return true; }
 }
 
 
