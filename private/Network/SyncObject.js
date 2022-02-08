@@ -107,6 +107,7 @@ function SyncObject() {
 			name: self.name, 
 			movementAnimationSpeed: self.movementAnimationSpeed, 
 			facing: self.facing,
+			flashpause: self.flashpause
 			};
 
 		if (self.flashpause) {

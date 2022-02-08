@@ -340,7 +340,7 @@ function Room (uid, gameServer) {
 
 	function ParseFlashPausePacket(data) {
 		if(data.length == 4) {
-			return {flashpause: (data.readUInt16LE(2) == 0 ? false : true)};
+			return {flashpause: (data.readUInt16LE(2) == 0 ? 0 : 1)};
 		}
 		return undefined;
 	}
