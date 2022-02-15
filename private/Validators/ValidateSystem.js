@@ -14,7 +14,7 @@ function SystemValidator(gameName) {
 	}
 
 	this.isValidSystem = function(sheet) {
-		return systemList.includes(sheet);
+		return systemsList.includes(sheet);
 	}
 }
 
