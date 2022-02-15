@@ -1,5 +1,6 @@
 const SoundValidator = require('../Validators/ValidateSound');
 const SpriteValidator = require('../Validators/ValidateSpriteSheet');
+const SystemValidator = require('../Validators/ValidateSystem');
 const Room = require('./Room');
 function GameServer(gameName) {
 	let self = this;
@@ -8,6 +9,7 @@ function GameServer(gameName) {
 	let playerCount = 0;
 	this.soundValidator = new SoundValidator(gameName);
 	this.spriteValidator = new SpriteValidator(gameName);
+	this.systemValidator = new SystemValidator(gameName);
 
 	this.PlayerCount = function() {
 		return playerCount;

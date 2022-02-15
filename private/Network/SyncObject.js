@@ -14,6 +14,7 @@ function SyncObject() {
 	this.typingstatus = 0;
 	this.flash = [0, 0, 0, 0, 0];
 	this.flashpause = false;
+	this.system = "";
 
 	let self = this;
 
@@ -97,6 +98,11 @@ function SyncObject() {
 		self.syncData.npcmove = args;
 	}
 
+	this.SetSystem = function(args) {
+		self.system = args.system;
+		self.syncData.system = args.system;
+	}
+
 	//returns everything you need to sync player on room entering
 	this.GetFullSyncData = function() {
 		let packet = { 
@@ -107,7 +113,8 @@ function SyncObject() {
 			name: self.name, 
 			movementAnimationSpeed: self.movementAnimationSpeed, 
 			facing: self.facing,
-			flashpause: self.flashpause
+			flashpause: self.flashpause,
+			system: self.system
 			};
 
 		if (self.flashpause) {

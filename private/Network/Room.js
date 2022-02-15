@@ -21,7 +21,8 @@ let PacketTypes =
 	syncme: 13,
 	flash: 14,
 	flashpause: 15,
-	npcmove: 16
+	npcmove: 16,
+	system: 17
 }
 
 function Room (uid, gameServer) {
@@ -39,7 +40,7 @@ function Room (uid, gameServer) {
 		} else {
 			clearInterval(rngInterval);
 		}
-	}, 2000);
+	}, 5000);
 
 	this.NewRngSeedPacket = function() {
 		return {type: "rngSeed", seed: rngSeed};
@@ -219,6 +220,12 @@ function Room (uid, gameServer) {
 					socket.send(JSON.stringify({type: "objectSync", uid: "room", npcmove: npcmovePacket}));
 				}
 			break;
+			case PacketTypes.system:
+				let systemPacket = ParseSystemPacket(data);
+				if(systemPacket) {
+					socket.syncObject.SetSystem(systemPacket);
+				}
+			break;
 		}
 		}
 	}
@@ -348,6 +355,15 @@ function Room (uid, gameServer) {
 	function ParseNpcMovePacket(data) {
 		if(data.length == 10) {
 			return {x: data.readUInt16LE(2), y: data.readUInt16LE(4), facing: data.readUInt16LE(6), id: data.readUInt16LE(8)};
+		}
+		return undefined;
+	}
+
+	function ParseSystemPacket(data) {
+		if(data.length > 2) {
+			let systemPacket = {system: data.toString().substr(2)};
+			if(gameServer.systemValidator.isValidSystem(systemPacket.system))
+				return systemPacket;
 		}
 		return undefined;
 	}
