@@ -6,12 +6,6 @@ const http = require('http');
 const https = require('https');
 const express = require('express');
 const ServerListing = require('./Network/ServerListing');
-/*
-TO-DO:
-	-add chat rooms instead of creating a bunch of chats on startup
-	-support for several games
-*/
-
 
 global.YNOnline = 
 {

@@ -1,4 +1,5 @@
 const Ignores = require("./Ignores");
+const PersonalMessage = require("./PersonalMessage");
 
 let bans = {
 	chat: [],
@@ -47,7 +48,8 @@ let CommandsList = {
 	ignoregame: Ignores.IgnoreGame,
 	pardonchat: Ignores.PardonChat,
 	pardongame: Ignores.PardonGame,
-	getuuid: Ignores.GetUUID
+	getuuid: Ignores.GetUUID,
+	pm: PersonalMessage
 }
 
 function ExecuteCommand(socket, args) {

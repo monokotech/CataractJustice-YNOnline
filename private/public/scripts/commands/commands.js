@@ -7,16 +7,14 @@ let commands = {
 	ignorechat: RemoteCommand,
 	ignoregame: RemoteCommand,
 	getuuid: function(args) {args.push(GetRoomID()); RemoteCommand(args); return true; },
-	pvol: SetPlayersVolumeCommand,
 	pardonchat: RemoteCommand,
 	pardongame: RemoteCommand,
-	rcm: RoomConnectionMessagesSwitchCommand,
 	pcm: PlayerRoomConnectionMessagesSwitchCommand,
 	spritefav: SpriteFavCommand,
 	spriteunfav: SpriteUnfavCommand,
 	banchat: RemoteCommand,
 	bangame: RemoteCommand,
-	switchnpcsync: function() { Module._SwitchNpcSync(); return true; }
+	pm: RemoteCommand
 }
 
 

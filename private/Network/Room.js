@@ -22,7 +22,8 @@ let PacketTypes =
 	flash: 14,
 	flashpause: 15,
 	npcmove: 16,
-	system: 17
+	system: 17,
+	execevent: 18
 }
 
 function Room (uid, gameServer) {
@@ -226,6 +227,13 @@ function Room (uid, gameServer) {
 					socket.syncObject.SetSystem(systemPacket);
 				}
 			break;
+			case PacketTypes.execevent:
+				return; //
+				let execeventPacket = ParseExecEventPacket(data);
+				if(execeventPacket) {
+					socket.syncObject.ExecEvent(execeventPacket);
+				}
+			break;
 		}
 		}
 	}
@@ -364,6 +372,13 @@ function Room (uid, gameServer) {
 			let systemPacket = {system: data.toString().substr(2)};
 			if(gameServer.systemValidator.isValidSystem(systemPacket.system))
 				return systemPacket;
+		}
+		return undefined;
+	}
+
+	function ParseExecEventPacket(data) {
+		if(data.length == 8) {
+			return {id: data.readUInt16LE(2), dkey: data.readUInt16LE(4), face: data.readUInt16LE(6)};
 		}
 		return undefined;
 	}

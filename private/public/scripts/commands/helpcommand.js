@@ -37,11 +37,6 @@ let helpData = {
 		help: "/getuuid for list of uuids\n/getuuid <tripcode> for specific user uuid"
 	},
 
-	pvol: {
-		tip: "sets other players sound effects volume (50% by default)",
-		help: "/pvol <volume> (number from 0 to 100)"
-	},
-
 	pardonchat: {
 		tip: "Lets you unignore players in chat",
 		help: "/pardonchat <uuid>"
@@ -50,11 +45,6 @@ let helpData = {
 	pardongame: {
 		tip: "Lets you unignore players in game",
 		help: "/pardongame <uuid>"
-	},
-
-	rcm: {
-		tip: "Switch room connection messages on/off",
-		help: "/rcm"
 	},
 
 	pcm: {
@@ -70,11 +60,6 @@ let helpData = {
 	spriteunfav: {
 		tip: "Remove shortcut for sprite",
 		help: "/spriteunfav <name>"
-	},
-
-	switchnpcsync: {
-		tip: "Switch NPC synchronisation",
-		help: "/switchnpcsync"
 	}
 }
 

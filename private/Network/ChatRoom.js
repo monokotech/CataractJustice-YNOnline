@@ -2,13 +2,28 @@ const ClientsStorage = require('../ClientsStorage');
 const tripcode = require('tripcode');
 const Validators = require('../Validators/Validators');
 const Commands = require('./Commands/Commands');
+const { IgnoreChat } = require('./Commands/Ignores');
 
 function ChatRoom(gameName) {
 	let clients = new Set();
 	let self = this;
 
+	this.GetSocketByUUID = function(uuid) {
+		for(let socket of clients) {
+			if(socket.uuid == uuid)
+				return socket;
+		}
+	}
+
 	this.ClientsCount = function() {
 		return clients.size;
+	}
+
+	this.SendFromSocketToUUID = function(socket, uuid, message) {
+		let receiverSocket = self.GetSocketByUUID(uuid);
+		if((Commands.bans.chat.includes[socket.uuid] && socket.uuid != socket.uuid) || ClientsStorage.IsClientIgnoredByClientInChat(socket, receiverSocket))
+			return;
+		receiverSocket.send(JSON.stringify(message));
 	}
 
 	function Broadcast(broadsocket, message, otherSocketsOnly) {
@@ -42,7 +57,7 @@ function ChatRoom(gameName) {
 
 	this.Connect = function(socket) {
 		clients.add(socket);
-
+		socket.chatRoom = self;
 		socket.onmessage = function(e) {
 			let msgjson;
 			try {

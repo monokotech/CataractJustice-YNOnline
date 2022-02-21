@@ -103,6 +103,11 @@ function SyncObject() {
 		self.syncData.system = args.system;
 	}
 
+	this.ExecEvent = function(args) {
+		if(args.dkey)
+			self.syncData.execevent = args;
+	}
+
 	//returns everything you need to sync player on room entering
 	this.GetFullSyncData = function() {
 		let packet = { 
