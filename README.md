@@ -15,6 +15,7 @@ Client source code: https://github.com/CataractJustice/ynoclient/
 -Web page for easyrpg online client
 -Web chat client.
 -Ability to ignore players in game and/or in chat
+-Operator commands (such as banchat, bangame)
 -"Uploading" and "Downloading" easyrpg save files. (all saves are stored on client side locally in browsers db)
 ```
 
@@ -22,23 +23,25 @@ Client source code: https://github.com/CataractJustice/ynoclient/
 # Game Server Setup
 ## Set your WebSocket port
 ```
-go into private/ 
-open configuration.js
-edit 'port' field of global.config object
-set 'https' to 'true' if you want to use https
-set key and cert paths for https
-put you games with generated gencache to private/public/play/games/ folder
+Go into private/ 
+Open configuration.js
+Edit 'port' field of global.config object
+Set 'https' to 'true' if you want to use https
+Set key and cert paths (for https)
+Put you games to private/public/play/games/ folder
+Run gencache in game folders (can be found here https://easyrpg.org/player/guide/webplayer/)
 ```
 ## Start your game server
 ```
 Use 'node YNOnline.js' to start game server
 ```
+
 # Client setup
 
 ## Set your WebSocket url
 ```
-go into public/scripts/
-open ynonline.js
-edit 'WSAddress'
+Go into public/scripts/
+Open ynonline.js
+Edit 'WSAddress' to be the server you want your client to connect to
 ```
 
