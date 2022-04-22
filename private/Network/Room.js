@@ -23,7 +23,7 @@ let PacketTypes =
 	flashpause: 15,
 	npcmove: 16,
 	system: 17,
-	execevent: 18
+	npcsprite: 18
 }
 
 function Room (uid, gameServer) {
@@ -32,6 +32,7 @@ function Room (uid, gameServer) {
 	let clients = new Set();
 	let self = this;
 	let rngSeed = parseInt(Math.random() * 2147483647);
+	let npcHosts = {};
 
 	let rngInterval = setInterval(function() {
 		//every once in a while we change room seed so game characters don't get stuck in a movement loop
@@ -217,8 +218,13 @@ function Room (uid, gameServer) {
 				let npcmovePacket = ParseNpcMovePacket(data);
 
 				if(npcmovePacket) {
-					socket.syncObject.MoveNpc(npcmovePacket);
-					socket.send(JSON.stringify({type: "objectSync", uid: "room", npcmove: npcmovePacket}));
+					if(!npcHosts[npcmovePacket.id] || !clients.has(npcHosts[npcmovePacket.id]))
+						npcHosts[npcmovePacket.id] = socket;
+
+					if(npcHosts[npcmovePacket.id] === socket) {
+						socket.syncObject.MoveNpc(npcmovePacket);
+						self.SyncPlayerForAll(socket);
+					}
 				}
 			break;
 			case PacketTypes.system:
@@ -227,12 +233,8 @@ function Room (uid, gameServer) {
 					socket.syncObject.SetSystem(systemPacket);
 				}
 			break;
-			case PacketTypes.execevent:
-				return; //
-				let execeventPacket = ParseExecEventPacket(data);
-				if(execeventPacket) {
-					socket.syncObject.ExecEvent(execeventPacket);
-				}
+			case PacketTypes.npcsprite:
+				return;
 			break;
 		}
 		}
@@ -372,13 +374,6 @@ function Room (uid, gameServer) {
 			let systemPacket = {system: data.toString().substr(2)};
 			if(gameServer.systemValidator.isValidSystem(systemPacket.system))
 				return systemPacket;
-		}
-		return undefined;
-	}
-
-	function ParseExecEventPacket(data) {
-		if(data.length == 8) {
-			return {id: data.readUInt16LE(2), dkey: data.readUInt16LE(4), face: data.readUInt16LE(6)};
 		}
 		return undefined;
 	}

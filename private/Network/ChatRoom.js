@@ -59,6 +59,10 @@ function ChatRoom(gameName) {
 		clients.add(socket);
 		socket.chatRoom = self;
 		socket.onmessage = function(e) {
+			if(e.data.length > 4096) {
+				return;
+			}
+
 			let msgjson;
 			try {
 				msgjson = JSON.parse(e.data);

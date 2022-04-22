@@ -60,6 +60,11 @@ let helpData = {
 	spriteunfav: {
 		tip: "Remove shortcut for sprite",
 		help: "/spriteunfav <name>"
+	},
+
+	pm: {
+		tip: "Send personal message",
+		help: "/pm <uuid> <message>"
 	}
 }
 
