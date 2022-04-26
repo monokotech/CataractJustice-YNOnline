@@ -1,5 +1,6 @@
 
 const SyncObject = require('./SyncObject');
+const EventObject = require('./EventObject');
 const ClientsStorage = require('../ClientsStorage');
 const Validators = require('../Validators/Validators');
 const Commands = require('./Commands/Commands');
@@ -23,7 +24,8 @@ let PacketTypes =
 	flashpause: 15,
 	npcmove: 16,
 	system: 17,
-	npcsprite: 18
+	npcsprite: 18,
+	npcactive: 19
 }
 
 function Room (uid, gameServer) {
@@ -33,6 +35,7 @@ function Room (uid, gameServer) {
 	let self = this;
 	let rngSeed = parseInt(Math.random() * 2147483647);
 	let npcHosts = {};
+	let eventObjects = {};
 
 	let rngInterval = setInterval(function() {
 		//every once in a while we change room seed so game characters don't get stuck in a movement loop
@@ -65,6 +68,10 @@ function Room (uid, gameServer) {
 		}
 
 		socket.send(JSON.stringify(this.NewRngSeedPacket()));
+
+		for(let key in this.eventObjects) {
+			socket.send(JSON.stringify(this.eventObjects[key]));
+		}
 
 		self.SyncAllForPlayer(socket);
 		self.FullSyncPlayerForAll(socket);
@@ -224,6 +231,9 @@ function Room (uid, gameServer) {
 					if(npcHosts[npcmovePacket.id] === socket) {
 						socket.syncObject.MoveNpc(npcmovePacket);
 						self.SyncPlayerForAll(socket);
+
+						if(!eventObjects[npcmovePacket.id]) eventObjects[npcmovePacket.id] = new EventObject();
+							eventObjects[npcmovePacket.id].npcmove = npcmovePacket;
 					}
 				}
 			break;
@@ -234,7 +244,22 @@ function Room (uid, gameServer) {
 				}
 			break;
 			case PacketTypes.npcsprite:
-				return;
+				let npcspritePacket = ParseNpcSpritePacket(data);
+				if(npcspritePacket) {
+					self.Broadcast({type: "objectSync", uid: "room", npcsprite: npcspritePacket});
+
+					if(!eventObjects[npcspritePacket.id]) eventObjects[npcspritePacket.id] = new EventObject();
+						eventObjects[npcspritePacket.id].npcsprite = npcspritePacket;
+				}
+			break;
+			case PacketTypes.npcactive:
+				let npcactivityPacket = ParseNpcActivityPacket(data);
+				if(npcactivityPacket) {
+					self.Broadcast({type: "objectSync", uid: "room", npcactive: npcactivityPacket});
+
+					if(!eventObjects[npcactivityPacket.id]) eventObjects[npcactivityPacket.id] = new EventObject();
+						eventObjects[npcactivityPacket.id].npcactive = npcactivityPacket;
+				}
 			break;
 		}
 		}
@@ -320,12 +345,6 @@ function Room (uid, gameServer) {
 		return undefined;
 	}
 
-	function ParseAnimTypePacket(data) {
-		//uint16 packet type, uint16 type
-		//will implement later if needed
-		console.error("not implemented");
-	}
-
 	function ParseAnimFramePacket(data) {
 		//uint16 packet type, uint16 frame
 		if(data.length == 4) {
@@ -375,6 +394,19 @@ function Room (uid, gameServer) {
 			if(gameServer.systemValidator.isValidSystem(systemPacket.system))
 				return systemPacket;
 		}
+		return undefined;
+	}
+
+	function ParseNpcSpritePacket(data) {
+		if(data.length > 6) {
+			return {id: data.readUInt16LE(2), index: data.readUInt16LE(4), sheet: data.toString().substr(6)};
+		}
+		return undefined;
+	}
+
+	function ParseNpcActivityPacket(data) {
+		if(data.length == 6)
+			return {id: data.readUInt16LE(2), active: data.readUInt16LE(4)};
 		return undefined;
 	}
 
