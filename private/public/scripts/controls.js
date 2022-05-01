@@ -41,6 +41,7 @@ function addControl(key) {
 	keynode.dataset["key"] = key.data_key;
 	keynode.dataset["keyCode"] = key.data_key_code;
 	npad.appendChild(keynode);
+	bindKey(keynode, keynode.dataset.key, keynode.dataset.keyCode);
 }
 
 function getControlNode(key) {
@@ -114,7 +115,7 @@ function initControls() {
 		optionNode.innerText = option.data_key;
 		optionNode.style.backgroundColor = getControlNode(option) ? "#505050" : "#303030";
 		optionNode.onclick = function() {
-			optionNode.style.backgroundColor = switchControl(option) ? "#505050" : "#303030";;
+			optionNode.style.backgroundColor = switchControl(option) ? "#505050" : "#303030";
 			mobileControlsMenu.style.display = "none";
 			saveControls();
 		}
