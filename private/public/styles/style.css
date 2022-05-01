@@ -68,3 +68,24 @@ a {
 	border-style: dashed;
 	border-width: 0px;
 }
+
+#mobileControlsMenu {
+	display: none;
+	position: fixed;
+	background-color: #101010;
+	width: 90%;
+	left: 5%;
+	height: 100%;
+	top: 0;
+	overflow-y: scroll;
+}
+
+.mobileControlsOption {
+	background-color: #303030;
+	display: block;
+	color: white;
+	margin: 16px;
+	padding: 32px;
+	text-align: center;
+	font-size: 32px;
+}
