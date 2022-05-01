@@ -35,7 +35,6 @@ let npad;
 let controlsMenu;
 
 function addControl(key) {
-	console.log(key);
 	let keynode = document.createElement("div");
 	keynode.id = key.name + "_touch_key";
 	keynode.innerText = key.name;
@@ -53,6 +52,16 @@ function removeControl(key) {
 	npad.removeChild(getControlNode(key));
 }
 
+function saveControls() {
+	let gameControls = [];
+	for(key of possibleKeys) {
+		if(getControlNode(key)) {
+			gameControls.push(key);
+		}
+	}
+	window.localStorage[gameName + "controls"] = JSON.stringify(gameControls);
+}
+
 function switchControl(key) {
 	if(getControlNode(key)) {
 		removeControl(key);
@@ -62,6 +71,8 @@ function switchControl(key) {
 		return true;
 	}
 }
+
+
 
 function initControls() {
 	npad = document.getElementById("npad")
@@ -73,14 +84,21 @@ function initControls() {
 		}
 	}
 
-	if(additionalControls[gameName]) {
-		for(let key of additionalControls[gameName]) {
+	let savedControls;
+	try {
+		savedControls = JSON.parse(window.localStorage[gameName + "controls"]);
+	} catch {}
+	let gameControls = savedControls ? savedControls : additionalControls[gameName];
+	if(gameControls) {
+		for(let key of gameControls) {
 			addControl(key);
 		}
 	}
 
 	//add chat button
-	addControl({name: "💬", data_key: "Tab/Chat", data_key_code: "9"});
+	if(!savedControls) {
+		addControl({name: "💬", data_key: "Tab/Chat", data_key_code: "9"});
+	}
 
 	let cancelNode = document.createElement("div");
 	cancelNode.className = "mobileControlsOption";
@@ -98,6 +116,7 @@ function initControls() {
 		optionNode.onclick = function() {
 			optionNode.style.backgroundColor = switchControl(option) ? "#505050" : "#303030";;
 			mobileControlsMenu.style.display = "none";
+			saveControls();
 		}
 		mobileControlsMenu.appendChild(optionNode);
 	}
