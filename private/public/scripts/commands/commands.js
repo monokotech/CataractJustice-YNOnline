@@ -14,7 +14,9 @@ let commands = {
 	spriteunfav: SpriteUnfavCommand,
 	banchat: RemoteCommand,
 	bangame: RemoteCommand,
-	pm: RemoteCommand
+	pm: RemoteCommand,
+	track: TrackPlayerCommand,
+	untrack: UntrackPlayerCommand
 }
 
 

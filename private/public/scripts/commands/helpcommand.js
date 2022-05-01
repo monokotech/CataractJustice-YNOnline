@@ -65,6 +65,16 @@ let helpData = {
 	pm: {
 		tip: "Send personal message",
 		help: "/pm <uuid> <message>"
+	},
+
+	track: {
+		tip: "Start tracking players with specific name",
+		help: "/track <name>"
+	},
+
+	untrack: {
+		tip: "Stop tracking players with specific name",
+		help: "/track <name>"
 	}
 }
 
@@ -79,7 +89,7 @@ function HelpCommand(args) {
 			PrintChatInfo(helpData[args[1]].help + "\n" + helpData[args[1]].tip, "Help")
 		}
 		else {
-			PrintChatInfo("Unknown command", "Help")
+			PrintChatInfo("Invalid arguments", "Help")
 		}
 	} else {
 		return false;
