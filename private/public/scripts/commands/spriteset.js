@@ -294,16 +294,14 @@ function SpriteSetCommand(args) {
 			//if sprite was not found in favorites then try to find it in default sprite list
 			if(!sprite && spriteList[gameName])
 				sprite = spriteList[gameName][args[1]];
+		}
 		
-
-
-			if(sprite) {
-				sheet = Module.allocate(Module.intArrayFromString(sprite.sheet), Module.ALLOC_NORMAL);
-  				Module._SlashCommandSetSprite(sheet, sprite.id);
-  				Module._free(sheet);
-			} else {
+		if(sprite) {
+			sheet = Module.allocate(Module.intArrayFromString(sprite.sheet), Module.ALLOC_NORMAL);
+  			Module._SlashCommandSetSprite(sheet, sprite.id);
+  			Module._free(sheet);
+		} else {
 				PrintChatInfo("Unknown sprite name, see /spritelist", "SpriteSet");
-			}
 		}
 	} else if(args.length == 3) {
 		let id = parseInt(args[2]);
